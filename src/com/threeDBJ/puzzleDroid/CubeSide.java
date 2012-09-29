@@ -56,18 +56,20 @@ public class CubeSide {
 	return temp.rot(world.rotate);
     }
 
-    public Vec3 hitPoint(Vec3 start, Vec3 dir) {
-	Vec3 norm = getNormal();
-	float denom = dir.dot(norm);
-	if(denom <= 0f) return null;
-	Vec3 p = getPointOnPlane();
-	p.sub(start);
-	float d = p.dot(norm) / denom;
-	if(true) {
-	    return dir.mul(d).add(start);
-	} else {
-	    return null;
+    public Layer getHLayer(Vec2 ind) {
+	if(frontFace == Cube.kTop) {
+	    return hLayers[(int)ind.y];
 	}
+	return hLayers[dim - (int)ind.y - 1];
+    }
+
+    public Layer getVLayer(Vec2 ind) {
+	if(frontFace == Cube.kRight) {
+	    return vLayers[dim - (int)ind.x - 1];
+	}else if(frontFace == Cube.kBack) {
+	    return vLayers[dim - (int)ind.x - 1];
+	}
+	return vLayers[(int)ind.x];
     }
 
     private Vec2 getPlaneValues(Vec3 v) {
@@ -89,20 +91,41 @@ public class CubeSide {
 	return null;
     }
 
-    public Layer getHLayer(Vec2 ind) {
-	if(frontFace == Cube.kTop) {
-	    return hLayers[(int)ind.y];
-	}
-	return hLayers[dim - (int)ind.y - 1];
+    /* Returns the hit point on the plane containing this side, regardless of
+       whether the side was hit */
+    public Vec2 getPlaneHitLoc(Vec3 start, Vec3 dir) {
+	Vec3 norm = getNormal();
+	float denom = dir.dot(norm);
+	Vec3 p = getPointOnPlane();
+	p.sub(start);
+	float d = p.dot(norm) / denom;
+	Vec3 hp = dir.mul(d).add(start);
+	Mat4 rotInv = new Mat4(world.rotate);
+	rotInv.inv();
+	hp.rot(rotInv);
+	hp.x = (hp.x + 1f) / 2f;
+	hp.y = (hp.y + 1f) / 2f;
+	hp.z = (hp.z + 1f) / 2f;
+	Vec2 v = getPlaneValues(hp);
+	v.x = (v.x * (float)dim);
+	v.y = ((1f - v.y) * (float)dim);
+	return v;
     }
 
-    public Layer getVLayer(Vec2 ind) {
-	if(frontFace == Cube.kRight) {
-	    return vLayers[dim - (int)ind.x - 1];
-	}else if(frontFace == Cube.kBack) {
-	    return vLayers[dim - (int)ind.x - 1];
+    /* Gets the point on this side pointed to by a vector begining at start
+       in the direction of dir. Returns null if the side is not hit. */
+    private Vec3 hitPoint(Vec3 start, Vec3 dir) {
+	Vec3 norm = getNormal();
+	float denom = dir.dot(norm);
+	if(denom <= 0f) return null;
+	Vec3 p = getPointOnPlane();
+	p.sub(start);
+	float d = p.dot(norm) / denom;
+	if(true) {
+	    return dir.mul(d).add(start);
+	} else {
+	    return null;
 	}
-	return vLayers[(int)ind.x];
     }
 
     public Vec2 getHitLoc(Vec3 start, Vec3 dir) {
@@ -119,11 +142,7 @@ public class CubeSide {
 	    Vec2 v = getPlaneValues(hp);
 	    v.x = (v.x * (float)dim);
 	    v.y = ((1f - v.y) * (float)dim);
-	    Log.e("Cube", v.x + " " + v.y);
-	    Log.e("Cube-hLayer", hLayers[(int)v.x].zero+"");
-	    Log.e("Cube-vLayer", vLayers[(int)v.y].zero+"");
 	    return v;
-	    //return cubes.get(dim*r + c);
 	} else {
 	}
 	return null;

@@ -100,7 +100,6 @@ public class RubeCube {
 	    }
 	    z += cubeSize + space;
 	}
-	Log.e("Cube-init", x + " " + y + " " + z);
 
 	// Paint all sides black by default
 	for(i = 0; i < num_cubes; i+=1) {

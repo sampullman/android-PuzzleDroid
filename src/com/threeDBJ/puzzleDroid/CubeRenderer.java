@@ -76,11 +76,15 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 	Log.e("yMax", yMax+"");
     }
 
-    public Vec3 screenToWorld(Vec3 ratios) {
-	ratios.x = ratios.x * (xMax - xMin) + xMin;
-	ratios.y = ratios.y * (yMax - yMin) + yMin;
-	//Log.e("yeahhh", ratios+"");
-	return ratios;
+    public Vec3 screenToWorld(Vec3 p) {
+	p.x = p.x * (xMax - xMin) + xMin;
+	p.y = p.y * (yMax - yMin) + yMin;
+	Log.e("yeahhh", p+"");
+	// GLU.gluUnProject(p.x, p.y, 7f, modelViewMatrix, 0,
+	// 		 projectionMatrix, 0, viewport, 0, pointInPlane, 0);
+	// p.x = pointInPlane[0]*-6f;
+	// p.y = pointInPlane[1]*-6f;
+	return p;
     }
 
     @Override

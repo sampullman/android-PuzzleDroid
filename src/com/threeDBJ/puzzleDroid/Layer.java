@@ -76,19 +76,20 @@ public class Layer {
 	}
     }
 
-    public void drag(Vec3 dir) {
-	float angle = ((type == H) ? -1f * dir.x : -1f * dir.y);
-	setAngle(angle);
-	switch (axis) {
-	case XAxis:
-	    
-	    break;
-	case YAxis:
-	    break;
-	case ZAxis:
+    public void drag(Vec2 dir, int face) {
+	float angle;
+	if(face == Cube.kRight) {
+	    angle = ((type == H) ? dir.x : dir.y);
+	} else if(face == Cube.kBack) {
+	    angle = ((type == H) ? dir.x : dir.y);
+	} else if(face == Cube.kBottom) {
+	    angle = ((type == H) ? -1f * dir.x : -1f * dir.y);
+	} else {
+	    angle = angle = ((type == H) ? dir.x : -1f * dir.y);
 	}
+	setAngle(angle);
     }
-    Vec3 test = new Vec3(0f, 0f, 1f);
+
     public void setAngle(float angle) {
 	// normalize the angle
 	while (angle >= PI2) angle -= PI2;
@@ -97,7 +98,6 @@ public class Layer {
 
 	float sin = (float)Math.sin(angle);
 	float cos = (float)Math.cos(angle);
-	//rotation.rotate(zero, angle);
 	float[] m = rotation.val;
 	switch (axis) {
 	case XAxis:
@@ -125,8 +125,6 @@ public class Layer {
 	    m[Mat4.M20] = m[Mat4.M21] = m[Mat4.M02] = m[Mat4.M12] = 0f;
 	    break;
 	}
-	//test.rot(rotation);
-	//Log.v("Cube the fuck", test+"\n");
 	for (Cube cube : cubes) {
 	    if (cube != null) {
 		cube.animateTransform(rotation);
