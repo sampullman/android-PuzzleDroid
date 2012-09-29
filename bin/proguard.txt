@@ -1,0 +1,6 @@
+# view res/layout/main.xml #generated:7
+-keep class com.threeDBJ.puzzleDroid.cubeView { <init>(...); }
+
+# view AndroidManifest.xml #generated:7
+-keep class com.threeDBJ.puzzleDroid.puzzleDroid { <init>(...); }
+
