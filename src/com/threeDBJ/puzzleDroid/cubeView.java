@@ -38,6 +38,7 @@ public class cubeView extends GLSurfaceView {
 	_renderer = new CubeRenderer(mWorld);
 	// TODO -- set renderer in constructor
 	rCube.setRenderer(_renderer);
+	mWorld.setRubeCube(rCube);
 	setRenderer(_renderer);
     }
 

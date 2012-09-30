@@ -42,6 +42,8 @@ public class GLWorld {
     private IntBuffer   mColorBuffer;
     private ShortBuffer mIndexBuffer;
 
+    RubeCube cube;
+
     public float ztrans = 0f;
 
     int drawCount = 0;
@@ -58,6 +60,10 @@ public class GLWorld {
 
     public void GLWorld() {
 	transScale.setScale(0.5f, 0.5f, 0.5f);
+    }
+
+    public void setRubeCube(RubeCube cube) {
+	this.cube = cube;
     }
 
     public void addShape(GLShape shape) {
@@ -104,6 +110,7 @@ public class GLWorld {
 
     public void draw(GL10 gl) {
 	//gl.glPushMatrix();
+	cube.animate();
 	gl.glMultMatrixf(rotate.val, 0);
 	mColorBuffer.position(0);
 	mVertexBuffer.position(0);

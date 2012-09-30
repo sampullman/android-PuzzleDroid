@@ -2,40 +2,32 @@ package com.threeDBJ.puzzleDroid;
 
 import android.util.Log;
 
-import java.util.ArrayList;
-
 public class CubeSide {
 
     static final float eps = 0.0001f;
 
-    ArrayList<Cube> cubes;
     int frontFace, dim;
-    Vec3 normal=null, aPoint=null;
+    Vec3 normal, aPoint;
     GLWorld world;
 
     Layer[] hLayers, vLayers;
     float[] bounds = new float[6];
+    CubeSide hNeg, hPos, vNeg, vPos;
 
     public CubeSide(GLWorld world, int dim, int frontFace, float xMin, float xMax,
 		    float yMin, float yMax, float zMin, float zMax) {
-	cubes = new ArrayList<Cube>();
 	this.frontFace = frontFace;
 	this.world = world;
 	this.dim = dim;
+	this.normal = new Vec3(xMin + xMax, yMin + yMax, zMin + zMax);
+	this.normal.nor();
+	this.aPoint = new Vec3(normal);
 	bounds[0] = xMin - eps;
 	bounds[1] = xMax + eps;
 	bounds[2] = yMin - eps;
 	bounds[3] = yMax + eps;
 	bounds[4] = zMin - eps;
 	bounds[5] = zMax + eps;
-    }
-
-    public void addCube(Cube cube) {
-	if(normal == null) {
-	    normal = cube.getNormal(frontFace);
-	    aPoint = cube.getFace(frontFace).getVertex(0);
-	}
-	cubes.add(cube);
     }
 
     public void setHLayers(Layer[] l) {

@@ -21,6 +21,7 @@ import java.util.HashSet;
 
 public class Layer {
 
+    RubeCube cube;
     HashSet<Cube> cubes = new HashSet<Cube>();
     //Cube[] cubes;
     // which axis do we rotate around?
@@ -31,16 +32,17 @@ public class Layer {
     static public final int ZAxis = 2;
     static public final float PI = (float)Math.PI;
     static public final float PI2 = 2f * PI;
+    static public final float HALFPI = PI / 2f;
     static final int POS=0, NEG=1, H=0, V=1;
-    int mode, type;
-    float angle;
+    int mode, type, fixInd = 21;
+    float angle=0f, fixAngle;
     Vec3 zero;
     Mat4 rotation = new Mat4();
 
-    public Layer(Vec3 zero, int axis) {
+    public Layer(RubeCube cube, Vec3 zero, int axis) {
 	this.zero = zero;
 	this.axis = axis;
-	//this.cubes = cubes;
+	this.cube = cube;
     }
 
     public void setType(int type) {
@@ -54,10 +56,6 @@ public class Layer {
     public void replaceCube(Cube oldCube, Cube newCube) {
 	cubes.remove(oldCube);
 	cubes.add(newCube);
-    }
-
-    public void rotate(int angle) {
-
     }
 
     public void startAnimation() {
@@ -76,6 +74,19 @@ public class Layer {
 	}
     }
 
+    /* Rotates the layer to a stable position. Calls cube.endLayerAnimation
+       when finished to update layers and sides. */
+    public void animate() {
+	if(fixInd < 10) {
+	    setAngle(fixAngle);
+	    fixInd += 1;
+	    if(fixInd == 10) {
+		cube.endLayerAnimation(type, angle);
+		angle = 0f;
+	    }
+	}
+    }
+
     public void drag(Vec2 dir, int face) {
 	float angle;
 	if(face == Cube.kRight) {
@@ -90,11 +101,33 @@ public class Layer {
 	setAngle(angle);
     }
 
+    public void dragEnd() {
+	float a = angle % HALFPI;
+	Log.e("Cube angle", a+"");
+	if(a < 0) {
+	    if(a < -1f * (HALFPI / 2f)) {
+		fixAngle = (-1 * HALFPI - a) / 10f;
+		fixInd = 0;
+	    } else {
+		fixAngle = -1f * a / 10f;
+		fixInd = 0;
+	    }
+	} else {
+	    if(a > HALFPI / 2f) {
+		fixAngle = (HALFPI - a) / 10f;
+		fixInd = 0;
+	    } else {
+		fixAngle = -1f * a / 10f;
+		fixInd = 0;
+	    }
+	}
+    }
+
     public void setAngle(float angle) {
 	// normalize the angle
-	while (angle >= PI2) angle -= PI2;
-	while (angle < 0f) angle += PI2;
-	this.angle = angle;
+	while (angle >= PI) angle -= PI2;
+	while (angle < -1 * PI) angle += PI2;
+	this.angle += angle;
 
 	float sin = (float)Math.sin(angle);
 	float cos = (float)Math.cos(angle);

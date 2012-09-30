@@ -20,14 +20,14 @@ public class RubeCube {
     GLSurfaceView mView;
     GLWorld world;
     CubeRenderer mRenderer;
-    Cube[] cubes;
+    Cube[][][] cubes;
     CubeSide[] cubeSides = new CubeSide[6];
     CubeSide front, back, left, right, top, bottom, curSide;
     Layer[] lx, ly, lz;
     Layer curLayer;
     CubeRegistry cubeRegistry = new CubeRegistry();
     Vec3 coords, newCoords;
-    Vec2 hitVec, dragVec, dir;
+    Vec2 hitVec, dragVec, vel, dir = new Vec2();
 
     // for random cube movements
     Random mRandom = new Random(System.currentTimeMillis());
@@ -69,8 +69,8 @@ public class RubeCube {
         GLColor black = new GLColor(0, 0, 0);
 
 	int num_cubes = dim*dim*dim, dim2 = dim*dim;
-	cubes = new Cube[num_cubes];
-	Layer[] layers = new Layer[num_cubes];
+	cubes = new Cube[dim][dim][dim];
+	Layer[] layers = new Layer[dim2];
 
 	float curX, curY, curZ;
 	curX = curY = curZ = -1f;
@@ -90,9 +90,9 @@ public class RubeCube {
 		    xleft = x;
 		    ybot = y;
 		    zback = z;
-		    cubes[n] = new Cube(world, xleft, ybot, zback,
+		    cubes[k][j][i] = new Cube(world, xleft, ybot, zback,
 					xleft+cubeSize, ybot+cubeSize, zback+cubeSize);
-		    cubeRegistry.register(cubes[n]);
+		    cubeRegistry.register(cubes[k][j][i]);
 		    n += 1;
 		    x += cubeSize + space;
 		}
@@ -100,13 +100,16 @@ public class RubeCube {
 	    }
 	    z += cubeSize + space;
 	}
-	Log.e("Cube-init", x + " " + y + " " + z);
 
 	// Paint all sides black by default
-	for(i = 0; i < num_cubes; i+=1) {
-	    Cube cube = cubes[i];
-	    for(j = 0; j < 6; j += 1) {
-		cube.setFaceColor(j, black);
+	for(i = 0; i < dim; i+=1) {
+	    for(j = 0; j < dim; j+=1) {
+		for(k = 0; k < dim; k+=1) {
+		    Cube cube = cubes[i][j][k];
+		    for(int w=0; w<6; w+=1) {
+			cube.setFaceColor(w, black);
+		    }
+		}
 	    }
 	}
 
@@ -125,58 +128,61 @@ public class RubeCube {
 	cubeSides[Cube.kTop] = top;
 
 	// Paint back blue
-	for(i = dim2-1; i >= 0; i -= 1) {
-	    cubes[i].setFaceColor(Cube.kBack, blue);
-	    back.addCube(cubes[i]);
+	i=0;
+	for(j=0; j<dim; j+=1) {
+	    for(k=0; k<dim; k+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kBack, blue);
+	    }
 	}
 
 	// Paint front green
-	for(i = num_cubes - (int)dim; i >= num_cubes - dim2; i -= dim) {
-	    for(j=0;j<dim;j+=1) {
-		cubes[i+j].setFaceColor(Cube.kFront, green);
-		front.addCube(cubes[i+j]);
+	i=dim-1;
+	for(j=0; j<dim; j+=1) {
+	    for(k=0; k<dim; k+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kFront, green);
 	    }
 	}
 
 	// Paint left yellow
-	for(i = dim2 - dim; i >= 0; i-=dim) {
-	    for(j=0;j<num_cubes;j+=dim2) {
-		cubes[i+j].setFaceColor(Cube.kLeft, yellow);
-		left.addCube(cubes[i+j]);
+	k=0;
+	for(i=0; i<dim; i+=1) {
+	    for(j=0; j<dim;j+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kLeft, yellow);
 	    }
 	}
 
-	for(i = num_cubes-1; i >= num_cubes-dim2 ; i-=dim) {
-	    for(j=0;j<num_cubes-1;j+=dim2) {
-		cubes[i-j].setFaceColor(Cube.kRight, white);
-		right.addCube(cubes[i-j]);
+	// Paint right white.
+	k=dim-1;
+	for(i=0; i<dim; i+=1) {
+	    for(j=0; j<dim;j+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kRight, white);
 	    }
 	}
 
 	// Paint bottom orange
-	for(i = num_cubes - dim2; i >= 0; i-=dim2) {
-	    for(j = 0; j < dim; j+=1) {
-		cubes[i+j].setFaceColor(Cube.kBottom, orange);
-		bottom.addCube(cubes[i+j]);
+	j=0;
+	for(i=0; i<dim; i+=1) {
+	    for(k=0; k<dim; k+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kBottom, orange);
 	    }
 	}
 
 	// Paint top red
-	for(i = dim2-dim; i < num_cubes; i+=dim2) {
-	    for(j = 0; j < dim; j+=1) {
-		cubes[i+j].setFaceColor(Cube.kTop, red);
-		top.addCube(cubes[i+j]);
+	j=dim-1;
+	for(i=0; i<dim; i+=1) {
+	    for(k=0; k<dim; k+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kTop, red);
 	    }
 	}
 
 	// Record z layer
 	curZ += (cubeSize) / 2f;
 	for(i=0;i<dim;i+=1) {
-	    lz[i] = new Layer(new Vec3(0f, 0f, curZ), Layer.ZAxis);
+	    lz[i] = new Layer(this, new Vec3(0f, 0f, curZ), Layer.ZAxis);
 	    curZ += cubeSize + space;
 	    for(j=0;j<dim;j+=1) {
 		for(k=0;k<dim;k+=1) {
-		    lz[i].add(cubes[i*dim2 + j*dim + k]);
+		    lz[i].add(cubes[i][j][k]);
 		}
 	    }
 	}
@@ -186,12 +192,12 @@ public class RubeCube {
 	right.setVLayers(lz);
 	// Record x layer
 	curX += (cubeSize) / 2f;
-	for(i=0;i<dim;i+=1) {
-	    lx[i] = new Layer(new Vec3(curX, 0f, 0f), Layer.XAxis);
+	for(k=0;k<dim;k+=1) {
+	    lx[k] = new Layer(this, new Vec3(curX, 0f, 0f), Layer.XAxis);
 	    curX += cubeSize + space;
 	    for(j=0;j<dim;j+=1) {
-		for(k=0;k<dim;k+=1) {
-		    lx[i].add(cubes[i + j*dim + k*dim2]);
+		for(i=0;i<dim;i+=1) {
+		    lx[k].add(cubes[i][j][k]);
 		}
 	    }
 	}
@@ -199,14 +205,15 @@ public class RubeCube {
 	back.setVLayers(lx);
 	top.setVLayers(lx);
 	bottom.setVLayers(lx);
-	// Record y layer
+	// Record y layer and register the cubes with the world
 	curY += (cubeSize) / 2f;
-	for(i=0;i<dim;i+=1) {
-	    ly[i] = new Layer(new Vec3(0f, curY, 0f), Layer.YAxis);
+	for(j=0;j<dim;j+=1) {
+	    ly[j] = new Layer(this, new Vec3(0f, curY, 0f), Layer.YAxis);
 	    curY += cubeSize + space;
-	    for(j=0;j<dim;j+=1) {
+	    for(i=0;i<dim;i+=1) {
 		for(k=0;k<dim;k+=1) {
-		    ly[i].add(cubes[i*dim + j*dim2 + k]);
+		    ly[j].add(cubes[i][j][k]);
+		    world.addShape(cubes[i][j][k]);
 		}
 	    }
 	}
@@ -214,9 +221,6 @@ public class RubeCube {
 	back.setHLayers(ly);
 	left.setHLayers(ly);
 	right.setHLayers(ly);
-
-	for(i = 0; i < num_cubes; i+=1)
-	    world.addShape(cubes[i]);
 
 	world.translate(0f, 0f, getZTrans());
 	world.generate();
@@ -234,16 +238,45 @@ public class RubeCube {
 	return -6f;
     }
 
-    public Cube[] getLayer(Cube c, int dir) {
-	Cube[] layer = new Cube[dim*dim];
-	/* Horizontal layer */
-	if(dir == 0) {
-	    
-	/* Vertical layer */
-	} else {
-	    
+    public void animate() {
+	for(int i=0;i<dim;i+=1) {
+	    lx[i].animate();
+	    ly[i].animate();
+	    lz[i].animate();
 	}
-	return layer;
+    }
+
+    /* Update layers and sides */
+    public void endLayerAnimation(int type, float angle) {
+	int nTurns = (int)(angle  / (Layer.HALFPI - 0.01f));
+	Log.e("nTurns", nTurns+"");
+	if(type == Layer.H) {
+	    switch(curSide.frontFace) {
+	    case Cube.kFront:
+		
+		break;
+	    case Cube.kBack:
+
+		break;
+	    case Cube.kLeft:
+
+		break;
+	    case Cube.kRight:
+
+		break;
+	    case Cube.kTop:
+
+		break;
+	    case Cube.kBottom:
+
+		break;
+	    }
+	} else {
+
+	}
+	curSide = null;
+	curLayer = null;
+	dir = new Vec2();
     }
 
     public void handleTouch(MotionEvent e) {
@@ -291,21 +324,24 @@ public class RubeCube {
 	    } else if(mode == SPIN) {
 		newCoords = mRenderer.screenToWorld(getRatio(x2, y2));
 		Vec2 hp = curSide.getPlaneHitLoc(newCoords, new Vec3(0f, 0f, 1f));
-		if(hp != null) {
-		    dir = new Vec2(hp).sub(dragVec);
-		    if(Math.abs(dir.x) > Math.abs(dir.y)) {
+		vel = new Vec2(hp).sub(dragVec);
+		if(curLayer == null) {
+		    dir.add(vel);
+		    float xAbs = Math.abs(dir.x);
+		    float yAbs = Math.abs(dir.y);
+		    if(xAbs > yAbs && xAbs > 0.02f) {
 			curLayer = curSide.getHLayer(hitVec);
 			curLayer.setType(Layer.H);
-		    } else {
+		    } else if(yAbs > 0.02f) {
 			curLayer = curSide.getVLayer(hitVec);
 			curLayer.setType(Layer.V);
 		    }
-		    dragVec = hp;
 		}
+		dragVec = hp;
 		/* Possible if the user touched the very edge of a cube.
 		   Should be resolved in the future. (TODO) */
-		if(dir != null) {
-		    curLayer.drag(dir, curSide.frontFace);
+		if(curLayer != null) {
+		    curLayer.drag(vel, curSide.frontFace);
 		}
 		coords = newCoords;
 	    }
@@ -314,16 +350,16 @@ public class RubeCube {
 	case MotionEvent.ACTION_UP: {
 	    activePtrId = -1;
 	    mode = NONE;
-	    curSide = null;
-	    curLayer = null;
+	    if(curLayer != null)
+		curLayer.dragEnd();
 	    break;
 	}
 
 	case MotionEvent.ACTION_CANCEL: {
 	    activePtrId = -1;
 	    mode = NONE;
-	    curSide = null;
-	    curLayer = null;
+	    if(curLayer != null)
+		curLayer.dragEnd();
 	    break;
 	}
 	case MotionEvent.ACTION_POINTER_UP: {
