@@ -1,0 +1,19 @@
+# Emacs autosave files
+*~
+#*#
+
+# Files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+
+ # Local configuration file
+local.properties
+
+# Some built application files
+*.ap_
