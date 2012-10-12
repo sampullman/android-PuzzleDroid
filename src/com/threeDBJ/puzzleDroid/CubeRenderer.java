@@ -1,5 +1,6 @@
 package com.threeDBJ.puzzleDroid;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.util.Log;
@@ -24,19 +25,38 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     boolean worldBoundsSet = false;
 
     private GLWorld mWorld;
+    private CubeMenu menu;
+    private Context context;
 
-    public CubeRenderer(GLWorld world) {
+    public CubeRenderer(Context context, GLWorld world, CubeMenu menu) {
 	mWorld = world;
+	this.menu = menu;
+	this.context = context;
     }
 
     @Override
     public void onSurfaceCreated(GL10 g, EGLConfig config) {
-        //gl.glClearColor(0f, 0f, 0f, 1.0f);
+	GL11 gl = (GL11)g;
+	menu.loadTexture(gl, context, R.drawable.menu_button);
+
+	gl.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+	gl.glClearDepthf(1.0f);
+	gl.glEnable(GL10.GL_DEPTH_TEST);
+	gl.glDepthFunc(GL10.GL_LEQUAL);
+	gl.glShadeModel(GL10.GL_SMOOTH);
+        gl.glEnable(GL11.GL_CULL_FACE);
+	gl.glEnable(GL10.GL_BLEND);
+	gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+
+	gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_NICEST);
+	Log.e("Cube", "onSurfaceCreated");
     }
 
     @Override
     public void onDrawFrame(GL10 g) {
 	GL11 gl = (GL11)g;
+
 	// Clears the screen and depth buffer.
 	gl.glClearColor(0.5f,0.5f,0.5f,1);
 	gl.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -49,16 +69,17 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 	gl.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelViewMatrix, 0);
 	if(!worldBoundsSet) {
 	    getWorldBounds();
-	    worldBoundsSet = true;
 	}
 
-        gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 	gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
-        gl.glEnable(GL11.GL_CULL_FACE);
-        gl.glShadeModel(GL11.GL_SMOOTH);
-        gl.glEnable(GL11.GL_DEPTH_TEST);
-
-        mWorld.draw(gl);
+        gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+	gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+	menu.draw(gl);
+	mWorld.draw(gl);
+	gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
+	gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
+	gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);
+	//gl.glFlush();
     }
 
     private void getWorldBounds() {
@@ -70,6 +91,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 			 projectionMatrix, 0, viewport, 0, pointInPlane, 0);
 	xMin = pointInPlane[0]*-6f;
 	yMax = pointInPlane[1]*-6f;
+	worldBoundsSet = true;
+	menu.setBounds(xMin, xMax, yMin, yMax);
     }
 
     public Vec3 screenToWorld(Vec3 p) {
@@ -81,6 +104,9 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceChanged(GL10 g, int w, int h) {
 	GL11 gl = (GL11)g;
+	if(h == 0) {
+	    h = 1;
+	}
         _width = w;
         _height = h;
         gl.glViewport(0, 0, w, h);
@@ -91,11 +117,14 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         gl.glLoadIdentity();
 
 	GLU.gluPerspective(gl, 45f, ratio, 5f, 10f);
+	//GLU.gluPerspective(gl, 45f, ratio, 0.1f, 100f);
 	gl.glGetIntegerv(GL11.GL_VIEWPORT, viewport, 0);
 	gl.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);
 	// OpenGL goes for quality over performance by default
 	//gl.glDisable(GL11.GL_DITHER);
         //gl.glActiveTexture(GL11.GL_TEXTURE0);
+	//g.glEnable(GL10.GL_TEXTURE_2D);
+	//menu.loadTexture(gl, context, R.drawable.menu_button);
     }
 
 }

@@ -19,6 +19,7 @@ package com.threeDBJ.puzzleDroid;
 import android.util.Log;
 
 import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 public class GLFace {
@@ -27,6 +28,7 @@ public class GLFace {
     GLColor mColor;
     // These vectors are normalized
     Vec3 normal;
+    Texture texture;
 
     public GLFace() {
     }
@@ -52,6 +54,12 @@ public class GLFace {
 	normal.nor();
     }
 
+    /* TODO -- probably shouldn't be passing in env */
+    public void setTexture(GLEnvironment env, Texture tex) {
+	this.texture = tex;
+	env.addTexture(tex);
+    }
+
     public void addVertex(GLVertex v) {
 	mVertexList.add(v);
     }
@@ -60,8 +68,13 @@ public class GLFace {
 	return mVertexList.get(i);
     }
 
+    int nCol = 0;
     // must be called after all vertices are added
     public void setColor(GLColor c) {
+	//setColorAll(c);
+	mVertexList.get(2).color = c;
+	nCol += 1;
+	/*
 	int last = mVertexList.size() - 1;
 	if (last < 2) {
 	    Log.e("GLFace", "not enough vertices in setColor()");
@@ -77,6 +90,14 @@ public class GLFace {
 	    }
 	    vertex.color = c;
 	}
+	*/
+	mColor = c;
+    }
+
+    public void setColorAll(GLColor c) {
+	for(GLVertex v : mVertexList) {
+	    v.color = c;
+	}
 	mColor = c;
     }
 
@@ -85,18 +106,31 @@ public class GLFace {
     }
 
     public void putIndices(ShortBuffer buffer) {
-	int last = mVertexList.size() - 1;
+	GLVertex v;
+	v = mVertexList.get(1);
+	buffer.put(v.index);
+	v = mVertexList.get(0);
+	buffer.put(v.index);
+	v = mVertexList.get(2);
+	buffer.put(v.index);
 
-	GLVertex v0 = mVertexList.get(0);
-	GLVertex vn = mVertexList.get(last);
+	if(mVertexList.size() > 3) {
+	    v = mVertexList.get(3);
+	    buffer.put(v.index);
+	    v = mVertexList.get(1);
+	    buffer.put(v.index);
+	    v = mVertexList.get(2);
+	    buffer.put(v.index);
+	}
+    }
 
-	// push triangles into the buffer
-	for (int i = 1; i < last; i++) {
-	    GLVertex v1 = mVertexList.get(i);
-	    buffer.put(v0.index);
-	    buffer.put(v1.index);
-	    buffer.put(vn.index);
-	    v0 = v1;
+    public void putTexture(FloatBuffer buffer) {
+	if(texture != null) {
+	    texture.putCoords(buffer);
+	} else {
+	    for(int i=0;i<8;i+=1) {
+		buffer.put(0f);
+	    }
 	}
     }
 

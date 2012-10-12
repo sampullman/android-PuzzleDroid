@@ -36,34 +36,31 @@ public class Cube extends GLShape {
     public Cube(GLWorld world, float left, float bottom,
 		float back, float right, float top, float front) {
 	super(world);
-       	GLVertex leftBottomBack = addVertex(left, bottom, back);
-        GLVertex rightBottomBack = addVertex(right, bottom, back);
-       	GLVertex leftTopBack = addVertex(left, top, back);
-        GLVertex rightTopBack = addVertex(right, top, back);
-       	GLVertex leftBottomFront = addVertex(left, bottom, front);
-        GLVertex rightBottomFront = addVertex(right, bottom, front);
-       	GLVertex leftTopFront = addVertex(left, top, front);
-        GLVertex rightTopFront = addVertex(right, top, front);
+       	GLVertex lbBack = addVertex(left, bottom, back);
+        GLVertex rbBack = addVertex(right, bottom, back);
+       	GLVertex ltBack = addVertex(left, top, back);
+        GLVertex rtBack = addVertex(right, top, back);
+       	GLVertex lbFront = addVertex(left, bottom, front);
+        GLVertex rbFront = addVertex(right, bottom, front);
+       	GLVertex ltFront = addVertex(left, top, front);
+        GLVertex rtFront = addVertex(right, top, front);
 
-        /* Vertices added in clockwise order (when viewed from the front) */
-        // bottom
-        addFace(new GLFace(leftBottomBack, leftBottomFront,
-			   rightBottomFront, rightBottomBack));
-        // front
-        addFace(new GLFace(leftBottomFront, leftTopFront,
-			   rightTopFront, rightBottomFront));
-        // left
-        addFace(new GLFace(leftBottomBack, leftTopBack,
-			   leftTopFront, leftBottomFront));
-        // right
-        addFace(new GLFace(rightBottomBack, rightBottomFront,
-			   rightTopFront, rightTopBack));
-        // back
-        addFace(new GLFace(leftBottomBack, rightBottomBack,
-			   rightTopBack, leftTopBack));
-        // top
-        addFace(new GLFace(leftTopBack, rightTopBack,
-			   rightTopFront, leftTopFront));
+	// Bottom
+	addCubeSide(rbBack, rbFront, lbBack, lbFront);
+	// Front
+	addCubeSide(rbFront, rtFront, lbFront, ltFront);
+	// Left
+	addCubeSide(lbFront, ltFront, lbBack, ltBack);
+	// Right
+	addCubeSide(rbBack, rtBack, rbFront, rtFront);
+	// Back
+	addCubeSide(lbBack, ltBack, rbBack, rtBack);
+	// Top
+	addCubeSide(rtFront, rtBack, ltFront, ltBack);
+    }
+
+    private void addCubeSide(GLVertex rb, GLVertex rt, GLVertex lb, GLVertex lt) {
+    	addFace(new GLFace(rb, rt, addVertex(lb), lt));
     }
 
     public Vec3 getNormal(int face) {
@@ -79,14 +76,9 @@ public class Cube extends GLShape {
 	this.vLayer = vLayer;
     }
 
-    @Override
-    public int hashCode() {
-	return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-	return id == ((Cube)o).id;
+    public void snapToAxis() {
+	float[] euler = rot.getEulerAngles();
+	Log.e("Cube!", euler[0]+" "+euler[1]+" "+euler[2]);
     }
 
 }

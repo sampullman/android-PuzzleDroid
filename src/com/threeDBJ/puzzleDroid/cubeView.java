@@ -13,6 +13,7 @@ public class cubeView extends GLSurfaceView {
     private CubeRenderer _renderer;
     private RubeCube rCube;
     private GLWorld mWorld;
+    private CubeMenu mMenu;
 
     private GLWorld makeGLWorld() {
         GLWorld world = new GLWorld();
@@ -35,7 +36,8 @@ public class cubeView extends GLSurfaceView {
 	rCube = new RubeCube(mWorld, 3);
 	rCube.addShapes();
 	mWorld.generate();
-	_renderer = new CubeRenderer(mWorld);
+	mMenu = new CubeMenu();
+	_renderer = new CubeRenderer(getContext(), mWorld, mMenu);
 	// TODO -- set renderer in constructor
 	rCube.setRenderer(_renderer);
 	mWorld.setRubeCube(rCube);
@@ -43,18 +45,10 @@ public class cubeView extends GLSurfaceView {
     }
 
     public boolean onTouchEvent(final MotionEvent e) {
-	rCube.handleTouch(e);
+	if(!mMenu.handleTouch(e)) {
+	    rCube.handleTouch(e);
+	}
 	return true;
-    }
-
-    protected void init(GL10 gl) {
-	gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	gl.glEnable(GL10.GL_DEPTH_TEST);
-	gl.glEnable(GL10.GL_CULL_FACE);
-	gl.glDepthFunc(GL10.GL_LEQUAL);
-	gl.glClearDepthf(1.0f);
-	gl.glShadeModel(GL10.GL_SMOOTH);
     }
 
 }

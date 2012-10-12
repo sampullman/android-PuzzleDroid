@@ -16,31 +16,16 @@
 
 package com.threeDBJ.puzzleDroid;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.util.Iterator;
-import java.util.ArrayList;
-
 import android.util.Log;
 import android.view.MotionEvent;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 import android.opengl.GLU;
 
-public class GLWorld {
+public class GLWorld extends GLEnvironment {
 
     public static float radToDeg = 180f / (float)Math.PI;
-
-    private ArrayList<GLShape>	mShapeList = new ArrayList<GLShape>();
-    private ArrayList<GLVertex>	mVertexList = new ArrayList<GLVertex>();
-
-    private int mIndexCount = 0;
-
-    private IntBuffer   mVertexBuffer;
-    private IntBuffer   mColorBuffer;
-    private ShortBuffer mIndexBuffer;
 
     RubeCube cube;
 
@@ -50,13 +35,13 @@ public class GLWorld {
 
     Quaternion curQuat = new Quaternion(0f, 0f, 0f, 1f);
     Quaternion startQuat = new Quaternion(0f, 0f, 0f, 1f);
-    Mat4 rotate = new Mat4(), scale = new Mat4(), transScale = new Mat4();
+    Mat4 rotate = new Mat4(), transScale = new Mat4();
     Mat3 lastRot = new Mat3();
     Mat3 thisRot = new Mat3();
     Vec3 startPos = new Vec3(), curPos = new Vec3();
     ArcBall arcBall = new ArcBall();
     int w, h;
-    float adjustWidth, adjustHeight;
+    float adjustWidth, adjustHeight, scale=1f;
 
     public void GLWorld() {
 	transScale.setScale(0.5f, 0.5f, 0.5f);
@@ -66,63 +51,27 @@ public class GLWorld {
 	this.cube = cube;
     }
 
-    public void addShape(GLShape shape) {
-	mShapeList.add(shape);
-	mIndexCount += shape.getIndexCount();
-    }
-
-    public void generate() {
-	ByteBuffer bb = ByteBuffer.allocateDirect(mVertexList.size()*4*4);
-	bb.order(ByteOrder.nativeOrder());
-	mColorBuffer = bb.asIntBuffer();
-
-	bb = ByteBuffer.allocateDirect(mVertexList.size()*4*3);
-	bb.order(ByteOrder.nativeOrder());
-	mVertexBuffer = bb.asIntBuffer();
-
-	bb = ByteBuffer.allocateDirect(mIndexCount*2);
-	bb.order(ByteOrder.nativeOrder());
-	mIndexBuffer = bb.asShortBuffer();
-
-	Iterator<GLVertex> iter2 = mVertexList.iterator();
-	while (iter2.hasNext()) {
-	    GLVertex vertex = iter2.next();
-	    vertex.put(mVertexBuffer, mColorBuffer);
-	}
-
-	Iterator<GLShape> iter3 = mShapeList.iterator();
-	while (iter3.hasNext()) {
-	    GLShape shape = iter3.next();
-	    shape.putIndices(mIndexBuffer);
-	}
-
-    }
-
-    public GLVertex addVertex(float x, float y, float z) {
-	GLVertex vertex = new GLVertex(x, y, z, mVertexList.size());
-	mVertexList.add(vertex);
-	return vertex;
-    }
-
-    public void transformVertex(GLVertex vertex, Mat4 transform, Mat4 trans, Mat4 transInv) {
-	vertex.update(mVertexBuffer, transform, trans, transInv);
-    }
-
-    public void draw(GL10 gl) {
-	//gl.glPushMatrix();
+    public void draw(GL11 gl) {
+	super.draw(gl);
+	gl.glEnable(GL11.GL_DEPTH_TEST);
+	gl.glDepthFunc(GL11.GL_LEQUAL);
+	gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+	gl.glPushMatrix();
 	cube.animate();
+	gl.glScalef(scale, scale, scale);
 	gl.glMultMatrixf(rotate.val, 0);
-	mColorBuffer.position(0);
-	mVertexBuffer.position(0);
-	mIndexBuffer.position(0);
 	gl.glFrontFace(GL10.GL_CW);
         gl.glShadeModel(GL10.GL_FLAT);
         gl.glVertexPointer(3, GL10.GL_FIXED, 0, mVertexBuffer);
-        gl.glColorPointer(4, GL10.GL_FIXED, 0, mColorBuffer);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
+	gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, mTextureBuffer);
+	mColorBuffer.position(0);
+	mTextureBuffer.position(0);
+	mVertexBuffer.position(0);
+	mIndexBuffer.position(0);
         gl.glDrawElements(GL10.GL_TRIANGLES, mIndexCount, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
         drawCount++;
-	//gl.glPopMatrix();
-	gl.glFlush();
+	gl.glPopMatrix();
     }
 
     public void dragStart(float x, float y) {
@@ -146,6 +95,12 @@ public class GLWorld {
 
     public void translate(float x, float y, float z) {
 	transScale.setTranslation(x, y, z);
+    }
+
+    public void scale(float m) {
+	scale *= m;
+	if(scale < 0.2f) scale = 0.2f;
+	if(scale > 1.5f) scale = 1.5f;
     }
 
 }

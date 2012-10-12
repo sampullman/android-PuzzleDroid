@@ -18,23 +18,20 @@ package com.threeDBJ.puzzleDroid;
 
 public class GLColor {
 
-    public int red;
-    public int green;
-    public int blue;
-    public int alpha;
+    float red, green, blue, alpha;
 
-    public GLColor(int red, int green, int blue, int alpha) {
+    public GLColor(float red, float green, float blue, float alpha) {
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.alpha = alpha;
     }
 
-    public GLColor(int red, int green, int blue) {
+    public GLColor(float red, float green, float blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
-        this.alpha = 0x10000;
+        this.alpha = 1f;
     }
 
     public GLColor(GLColor color) {

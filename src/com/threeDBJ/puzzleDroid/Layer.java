@@ -46,8 +46,6 @@ public class Layer {
 	this.axisVec = new Vec3(zero);
 	this.cube = cube;
 	this.index = index;
-	transInv.trn(zero);
-	trans = new Mat4(transInv).inv();
     }
 
     public void setType(int type) {
@@ -91,6 +89,9 @@ public class Layer {
 	    fixInd += 1;
 	    if(fixInd == 10) {
 		cube.endLayerAnimation(axis, angle, index);
+		for(Cube c : cubes) {
+		    c.snapToAxis();
+		}
 		angle = 0f;
 	    }
 	}
@@ -113,25 +114,15 @@ public class Layer {
 
     public void dragEnd() {
     	float a = angle % HALFPI;
-    	Log.e("Cube angle", a+"");
-    	if(a < 0) {
-    	    if(a < -1f * (HALFPI / 2f)) {
-    		fixAngle = (-1 * HALFPI - a) / 10f;
-    		fixInd = 0;
-    	    } else {
-    		fixAngle = -1f * a / 10f;
-    		fixInd = 0;
-    	    }
-    	} else {
-    	    if(a > HALFPI / 2f) {
-    		fixAngle = (HALFPI - a) / 10f;
-    		fixInd = 0;
-    	    } else {
-    		fixAngle = -1f * a / 10f;
-    		fixInd = 0;
-    	    }
-    	}
-
+	if(a > HALFPI / 2f) {
+	    fixAngle = (HALFPI - a) / 10f;
+	} else if(a < -1f * (HALFPI / 2f)) {
+	    fixAngle = -1f * (HALFPI + a) / 10f;
+	} else {
+	    fixAngle = -1f * a / 10f;
+	}
+	fixInd = 0;
+	cube.spinEnabled(false);
     }
 
     public void setAngle(float angle) {
@@ -143,7 +134,7 @@ public class Layer {
 	localRot = new Quaternion(axisVec, angle, true);
 	for (Cube cube : cubes) {
 	    if (cube != null) {
-		cube.animateTransform(localRot, trans, transInv);
+		cube.animateTransform(localRot);
 	    }
 	}
     }

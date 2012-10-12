@@ -119,6 +119,16 @@ public class Quaternion implements Serializable {
 		return "[" + x + "|" + y + "|" + z + "|" + w + "]";
 	}
 
+    /** Gets Euler angles from this Quaternion */
+    public float[] getEulerAngles() {
+	float[] ret = new float[3];
+	float q22 = y * y;
+	ret[0] = (float)Math.atan2(2f*(w*x + y*z), 1f - 2f*(x*x + q22));
+	ret[1] = (float)Math.asin(2f*(w*y - z*x));
+	ret[2] = (float)Math.atan2(2f*(w*z + x*y), 1f - 2f*(q22 + z*z));
+	return ret;
+    }
+
 	/** Sets the quaternion to the given euler angles.
 	 * @param yaw the yaw in degrees
 	 * @param pitch the pitch in degress

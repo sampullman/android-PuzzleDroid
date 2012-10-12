@@ -28,13 +28,14 @@ public class RubeCube {
     CubeRegistry cubeRegistry = new CubeRegistry();
     Vec3 coords, newCoords;
     Vec2 hitVec, dragVec, vel, dir = new Vec2();
+    boolean spinEnabled=true;
 
     // for random cube movements
     Random mRandom = new Random(System.currentTimeMillis());
 
     float x1=0, x2=0, y1=0, y2=0,
-	dx=0, dy=0, xdist1=0, ydist1=0, xdist2=0, ydist2=0,
-	xtrans=0f, ytrans=0f, ztrans=0f, cubeSize, space;
+	dx=0, dy=0, zdist=0f,
+	xtrans=0f, ytrans=0f, ztrans=-6f, cubeSize, space;
 
     public static int NONE=0,DRAG=1,ZOOM=2,SPIN=3;
     private final float TOUCH_SCALE_FACTOR = (float)Math.PI / 180;
@@ -94,13 +95,13 @@ public class RubeCube {
 	}
 
 	// Paint all sides black by default
-        GLColor black = new GLColor(0, 0, 0);
+        GLColor black = new GLColor(0, 0, 0, 1f);
 	for(i = 0; i < dim; i+=1) {
 	    for(j = 0; j < dim; j+=1) {
 		for(k = 0; k < dim; k+=1) {
 		    Cube cube = cubes[i][j][k];
 		    for(int w=0; w<6; w+=1) {
-			cube.setFaceColor(w, black);
+			cube.setFaceColorAll(w, black);
 		    }
 		}
 	    }
@@ -135,14 +136,12 @@ public class RubeCube {
 
     public void setupSides() {
 	int i, j, k;
-	int one = 0x10000;
-        int half = 0x08000;
-        GLColor red = new GLColor(one, 0, 0);
-        GLColor green = new GLColor(0, one, 0);
-        GLColor blue = new GLColor(0, 0, one);
-        GLColor yellow = new GLColor(one, one, 0);
-        GLColor orange = new GLColor(one, half, 0);
-        GLColor white = new GLColor(one, one, one);
+        GLColor red = new GLColor(1f, 0, 0);
+        GLColor green = new GLColor(0, 1f, 0);
+        GLColor blue = new GLColor(0, 0, 1f);
+        GLColor yellow = new GLColor(1f, 1f, 0);
+        GLColor orange = new GLColor(1f, 0.5f, 0);
+        GLColor white = new GLColor(1f, 1f, 1f);
         GLColor black = new GLColor(0, 0, 0);
 	// Paint back blue
 	i=0;
@@ -157,14 +156,6 @@ public class RubeCube {
 	for(j=0; j<dim; j+=1) {
 	    for(k=0; k<dim; k+=1) {
 		cubes[i][j][k].setFaceColor(Cube.kFront, green);
-	    }
-	}
-
-	// Paint left yellow
-	k=0;
-	for(i=0; i<dim; i+=1) {
-	    for(j=0; j<dim;j+=1) {
-		cubes[i][j][k].setFaceColor(Cube.kLeft, yellow);
 	    }
 	}
 
@@ -189,6 +180,13 @@ public class RubeCube {
 	for(i=0; i<dim; i+=1) {
 	    for(k=0; k<dim; k+=1) {
 		cubes[i][j][k].setFaceColor(Cube.kTop, red);
+	    }
+	}
+	// Paint left yellow
+	k=0;
+	for(i=0; i<dim; i+=1) {
+	    for(j=0; j<dim;j+=1) {
+		cubes[i][j][k].setFaceColor(Cube.kLeft, yellow);
 	    }
 	}
     }
@@ -253,7 +251,7 @@ public class RubeCube {
     }
 
     public float getZTrans() {
-	return -6f;
+	return ztrans;
     }
 
     public void animate() {
@@ -311,7 +309,6 @@ public class RubeCube {
 		    }
 		}
 	    }
-	    Log.e("Cube", nTurns+" going once...");
 	    nTurns += n;
 	}
     }
@@ -325,6 +322,11 @@ public class RubeCube {
 	curSide = null;
 	curLayer = null;
 	dir = new Vec2();
+	spinEnabled(true);
+    }
+
+    public void spinEnabled(boolean spin) {
+	this.spinEnabled = spin;
     }
 
     public void handleTouch(MotionEvent e) {
@@ -338,6 +340,7 @@ public class RubeCube {
 	    activePtrId = e.getPointerId(0);
 	    world.dragStart(x1, y1);
 	    coords = mRenderer.screenToWorld(getRatio(x1, y1));
+	    if(!spinEnabled) break;
 	    for(int i=0;i<cubeSides.length;i+=1) {
 		hitVec = cubeSides[i].getHitLoc(coords, new Vec3(0f, 0f, 1f));
 		if(hitVec != null) {
@@ -347,12 +350,6 @@ public class RubeCube {
 		    break;
 		}
 	    }
-	    break;
-	}
-	case MotionEvent.ACTION_POINTER_DOWN: {
-	    xdist1 = Math.abs(e.getX(0)-e.getX(1));
-	    ydist1 = Math.abs(e.getY(0)-e.getY(1));
-	    if(xdist1 > 5f && ydist1 > 5f) mode=ZOOM;
 	    break;
 	}
 	case MotionEvent.ACTION_MOVE: {
@@ -368,7 +365,20 @@ public class RubeCube {
 		x1 = x2;
 		y1 = y2;
 	    } else if(mode == ZOOM) {
-		// Zoom
+		/*
+		float x1 = e.getX(0);
+		float x2 = e.getX(1);
+		float y1 = e.getY(0);
+		float y2 = e.getY(1);
+		float dist = (float)Math.sqrt(x1*x2 + y1*y2);
+		float distdiff = (float)Math.abs(zdist - dist);
+		if(dist > zdist && zdist > 3f) {
+		    world.scale(0.99f);
+		} else if(zdist > 5f) {
+		    world.scale(1.01f);
+		}
+		zdist = dist;
+		*/
 	    } else if(mode == SPIN && curSide != null) {
 		newCoords = mRenderer.screenToWorld(getRatio(x2, y2));
 		Vec2 hp = curSide.getPlaneHitLoc(newCoords, new Vec3(0f, 0f, 1f));
@@ -392,6 +402,21 @@ public class RubeCube {
 		    curLayer.drag(vel, curSide.frontFace);
 		}
 		coords = newCoords;
+	    }
+	    break;
+	}
+	case MotionEvent.ACTION_POINTER_DOWN: {
+	    if(curLayer != null && mode == SPIN)
+		curLayer.dragEnd();
+	    float x1 = e.getX(0);
+	    float x2 = e.getX(1);
+	    float y1 = e.getY(0);
+	    float y2 = e.getY(1);
+	    float xdist1 = Math.abs(x1 - x2);
+	    float ydist1 = Math.abs(y1 - y2);
+	    if(xdist1 > 5f && ydist1 > 5f) {
+		zdist = (float)Math.sqrt(x1*x2 + y1*y2);
+		mode=ZOOM;
 	    }
 	    break;
 	}
@@ -419,6 +444,7 @@ public class RubeCube {
 	    x1 = e.getX(nPtrInd);
 	    y1 = e.getY(nPtrInd);
 	    mode=DRAG;
+	    world.dragStart(x1, y1);
 	    activePtrId = e.getPointerId(nPtrInd);
 	    break;
 	}

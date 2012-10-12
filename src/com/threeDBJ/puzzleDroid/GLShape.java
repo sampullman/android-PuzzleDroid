@@ -19,6 +19,7 @@ package com.threeDBJ.puzzleDroid;
 import android.util.Log;
 
 import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -31,10 +32,10 @@ public class GLShape {
     protected ArrayList<GLVertex> mVertexList = new ArrayList<GLVertex>();
     // TODO -- make more efficient?
     protected ArrayList<Integer> mIndexList = new ArrayList<Integer>();
-    protected GLWorld mWorld;
+    protected GLEnvironment mEnv;
 
-    public GLShape(GLWorld world) {
-	mWorld = world;
+    public GLShape(GLEnvironment env) {
+	mEnv = env;
     }
 
     public void addFace(GLFace face) {
@@ -49,11 +50,21 @@ public class GLShape {
 	mFaceList.get(face).setColor(color);
     }
 
+    public void setFaceColorAll(int face, GLColor color) {
+	mFaceList.get(face).setColorAll(color);
+    }
+
     public void putIndices(ShortBuffer buffer) {
 	Iterator<GLFace> iter = mFaceList.iterator();
 	while (iter.hasNext()) {
 	    GLFace face = iter.next();
 	    face.putIndices(buffer);
+	}
+    }
+
+    public void putTextures(FloatBuffer buffer) {
+	for(GLFace face : mFaceList) {
+	    face.putTexture(buffer);
 	}
     }
 
@@ -69,22 +80,26 @@ public class GLShape {
 
     public GLVertex addVertex(float x, float y, float z) {
 
-	// look for an existing GLVertex first
-	Iterator<GLVertex> iter = mVertexList.iterator();
-	while (iter.hasNext()) {
-	    GLVertex vertex = iter.next();
-	    if (vertex.x == x && vertex.y == y && vertex.z == z) {
-		return vertex;
-	    }
-	}
+	// // look for an existing GLVertex first
+	// Iterator<GLVertex> iter = mVertexList.iterator();
+	// while (iter.hasNext()) {
+	//     GLVertex vertex = iter.next();
+	//     if (vertex.x == x && vertex.y == y && vertex.z == z) {
+	// 	return vertex;
+	//     }
+	// }
 
 	// doesn't exist, so create new vertex
-	GLVertex vertex = mWorld.addVertex(x, y, z);
+	GLVertex vertex = mEnv.addVertex(x, y, z);
 	mVertexList.add(vertex);
 	return vertex;
     }
 
-    public void animateTransform(Quaternion transform, Mat4 trans, Mat4 transInv) {
+    public GLVertex addVertex(GLVertex v) {
+	return addVertex(v.x, v.y, v.z);
+    }
+
+    public void animateTransform(Quaternion transform) {
 	//mAnimateTransform = transform;
 
 	if (rot != null) {
@@ -94,7 +109,7 @@ public class GLShape {
 	Iterator<GLVertex> iter = mVertexList.iterator();
 	while (iter.hasNext()) {
 	    GLVertex vertex = iter.next();
-	    mWorld.transformVertex(vertex, mTransform, trans, transInv);
+	    mEnv.transformVertex(vertex, mTransform);
 	}
     }
 

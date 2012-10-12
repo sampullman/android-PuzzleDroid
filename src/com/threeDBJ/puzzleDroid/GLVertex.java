@@ -16,7 +16,10 @@
 
 package com.threeDBJ.puzzleDroid;
 
+import android.util.Log;
+
 import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 public class GLVertex extends Vec3 {
 
@@ -35,6 +38,7 @@ public class GLVertex extends Vec3 {
 	this.y = v.y;
 	this.z = v.z;
 	this.index = v.index;
+	//this.color = v.color;
     }
 
     GLVertex(float x, float y, float z, int index) {
@@ -57,7 +61,7 @@ public class GLVertex extends Vec3 {
         return (int)(x * 65536.0f);
     }
 
-    public void put(IntBuffer vertexBuffer, IntBuffer colorBuffer) {
+    public void put(IntBuffer vertexBuffer, FloatBuffer colorBuffer) {
         vertexBuffer.put(toFixed(x));
         vertexBuffer.put(toFixed(y));
         vertexBuffer.put(toFixed(z));
@@ -67,30 +71,37 @@ public class GLVertex extends Vec3 {
             colorBuffer.put(0);
             colorBuffer.put(0);
         } else {
+	    //Log.e("Cube", "Color: "+this);
             colorBuffer.put(color.red);
             colorBuffer.put(color.green);
             colorBuffer.put(color.blue);
             colorBuffer.put(color.alpha);
         }
+	//Log.e("Cube", vertexBuffer.position()+" "+vertexBuffer.get(0)+" "+vertexBuffer.get(1)+" "+vertexBuffer.get(2));
     }
 
-    public void update(IntBuffer vertexBuffer, Mat4 transform, Mat4 trans, Mat4 transInv) {
+    public void update(IntBuffer vertexBuffer, Mat4 transform) {
         // skip to location of vertex in mVertex buffer
-        vertexBuffer.position(index * 3);
-
         if (transform == null) {
+	    vertexBuffer.position(index * 3);
             vertexBuffer.put(toFixed(x));
             vertexBuffer.put(toFixed(y));
             vertexBuffer.put(toFixed(z));
         } else {
+	    int ind = index*3;
             GLVertex temp = new GLVertex(this);
 	    //mul(transform);
 	    //temp.mul(transInv);
 	    temp.mul(transform);
 	    //temp.mul(trans);
-            vertexBuffer.put(toFixed(temp.x));
-            vertexBuffer.put(toFixed(temp.y));
-            vertexBuffer.put(toFixed(temp.z));
+            vertexBuffer.put(ind, toFixed(temp.x));
+            vertexBuffer.put(ind+1, toFixed(temp.y));
+            vertexBuffer.put(ind+2, toFixed(temp.z));
         }
+
+    }
+
+    public String toString() {
+	return x + " "+y+" "+z;
     }
 }
