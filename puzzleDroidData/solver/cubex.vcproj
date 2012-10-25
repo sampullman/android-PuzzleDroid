@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="cubex"
+	ProjectGUID="{03A2A2B1-6C18-48DD-8A46-5BF08D1F8D3D}"
+	Keyword="MakeFileProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake debug -f makefile.win32"
+				ReBuildCommandLine="nmake clean -f makefile.win32 &amp;&amp; nmake debug -f makefile.win32"
+				CleanCommandLine="nmake clean -f makefile.win32"
+				Output="cubex.exe"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="0">
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="nmake /nologo -f makefile.win32"
+				ReBuildCommandLine="nmake /nologo clean -f makefile.win32 &amp;&amp; nmake /nologo -f makefile.win32"
+				CleanCommandLine="nmake /nologo clean -f makefile.win32"
+				Output="cubex.exe"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath=".\cubex.cpp">
+			</File>
+			<File
+				RelativePath=".\loadsave.cpp">
+			</File>
+			<File
+				RelativePath=".\main.cpp">
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath=".\cubex.h">
+			</File>
+			<File
+				RelativePath=".\loadsave.h">
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

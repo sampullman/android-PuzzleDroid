@@ -1,0 +1,53 @@
+# makefile for cubex with MSVS on win32 by Eric
+
+CC=cl
+CPP=cl
+LINK=link
+RC=rc
+CFLAGS=/nologo /EHsc /ML /O2
+LFLAGS=/nologo /subsystem:console
+RFLAGS=
+RM=del /Q
+INCLUDES=cubex.h
+OBJS=main.obj cubex.obj
+RESS=
+LIBS=
+DBGCFLAGS=/EHsc /MLd /Zi
+DBGLFLAGS=/subsystem:console /debug
+DBGRFLAGS=
+DBGOBJS=main.obj.dbg cubex.obj.dbg
+DBGRESS=
+DBGLIBS=
+PDBS=cubex.ilk cubex.pdb vc70.pdb
+
+all: build
+
+debug: debugbuild
+
+build: $(OBJS) $(RESS)
+	$(LINK) $(LFLAGS)  /out:cubex.exe  $(OBJS) $(RESS) $(LIBS)
+
+debugbuild: $(DBGOBJS) $(DBGRESS)
+	$(LINK) $(DBGLFLAGS)  /out:cubex.exe  $(OBJS) $(DBGRESS) $(DBGLIBS)
+
+clean:
+	$(RM) $(OBJS) $(RESS)
+	$(RM) $(PDBS)
+
+main.obj: main.cpp $(INCLUDES)
+	$(CPP) $(CFLAGS) /c main.cpp
+
+cubex.obj: cubex.cpp $(INCLUDES)
+	$(CPP) $(CFLAGS) /c cubex.cpp
+
+cubex.res: cubex.rc cubex.ico resource.h
+	$(RC) $(RFLAGS) /fo cubex.res cubex.rc
+
+main.obj.dbg: main.cpp $(INCLUDES)
+	$(CPP) $(DBGCFLAGS) /c main.cpp
+
+cubex.obj.dbg: cubex.cpp $(INCLUDES)
+	$(CPP) $(DBGCFLAGS) /c cubex.cpp
+#	$(CPP) $(CFLAGS) /S cubex.cpp
+
+dummy:

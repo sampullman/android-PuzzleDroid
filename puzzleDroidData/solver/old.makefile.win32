@@ -1,0 +1,24 @@
+# Makefile for cubex by Eric (MSVS7 version)
+CC=cl
+LINK=link
+CFLAGS=/EHsc /O2 /nologo
+LFLAGS=/nologo
+INCLUDES=
+OBJS=cubex.obj main.obj
+RM=del /Q
+
+all: build
+
+build: $(OBJS)
+	$(LINK) $(LFLAGS)  /out:cubex.exe  $(OBJS)
+
+clean:
+	@erase $(OBJS)
+
+cubex.obj: cubex.cpp $(INCLUDES) cubex.h
+	$(CC) $(CFLAGS) /c cubex.cpp
+
+main.obj: main.cpp $(INCLUDES) cubex.h
+	$(CC) $(CFLAGS) /c main.cpp
+
+dummy:
