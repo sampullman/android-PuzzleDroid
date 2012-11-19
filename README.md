@@ -1,4 +1,4 @@
-# SciGraph Calculator
+# Cube Droid
 ### by Sam Pullman
 
 This is an NxNxN Rubik's Cube implementation for Android, featuring:
