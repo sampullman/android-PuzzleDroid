@@ -12,6 +12,9 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.TextureFont;
+
 public class CubeRenderer implements GLSurfaceView.Renderer {
 
     private float _width = 320f;
@@ -33,7 +36,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     RubeCube rCube;
 
     public CubeRenderer(Context context, TextureFont font, GLWorld world,
-			RubeCube rCube, CubeMenu menu, SharedPreferences prefs) {	mWorld = world;
+			RubeCube rCube, CubeMenu menu, SharedPreferences prefs) {
+	mWorld = world;
 	this.menu = menu;
 	this.rCube = rCube;
 	this.context = context;
@@ -84,6 +88,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 	gl.glMatrixMode(GL11.GL_MODELVIEW);
         gl.glLoadIdentity();
 
+	// TODO -- Move this to initialization?
 	GLU.gluLookAt(gl, 0f, 0f, 7f,
 		      0f, 0f, 0f,
 		      0f, 1f, 0f);
@@ -136,13 +141,11 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     }
 
     public void surfaceSetup(GL11 gl) {
-
 	// Reset projection matrix
 	float ratio = _width / _height;
         gl.glMatrixMode(GL11.GL_PROJECTION);
         gl.glLoadIdentity();
 
-	
 	GLU.gluPerspective(gl, 45f, ratio, 5f, 10f);
 	gl.glGetIntegerv(GL11.GL_VIEWPORT, viewport, 0);
 	gl.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projectionMatrix, 0);

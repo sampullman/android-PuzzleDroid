@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import com.threeDBJ.MGraphicsLib.TextureFont;
+
 public class cubeView extends GLSurfaceView {
 
     private CubeRenderer _renderer;

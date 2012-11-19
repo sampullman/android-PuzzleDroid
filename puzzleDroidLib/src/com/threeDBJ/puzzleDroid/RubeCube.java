@@ -14,6 +14,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.threeDBJ.MGraphicsLib.GLColor;
+import com.threeDBJ.MGraphicsLib.Vec2;
+import com.threeDBJ.MGraphicsLib.Vec3;
+
 public class RubeCube {
 
     public static float MAX_SPIN_RATE = 0.08f;

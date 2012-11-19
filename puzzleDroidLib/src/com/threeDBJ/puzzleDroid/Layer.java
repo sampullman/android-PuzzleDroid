@@ -19,6 +19,10 @@ import android.util.Log;
 
 import java.util.HashSet;
 
+import com.threeDBJ.MGraphicsLib.Vec2;
+import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.Quaternion;
+
 public class Layer {
 
     RubeCube cube;

@@ -2,6 +2,11 @@ package com.threeDBJ.puzzleDroid;
 
 import android.util.Log;
 
+import com.threeDBJ.MGraphicsLib.GLVertex;
+import com.threeDBJ.MGraphicsLib.Mat4;
+import com.threeDBJ.MGraphicsLib.Vec2;
+import com.threeDBJ.MGraphicsLib.Vec3;
+
 public class CubeSide {
 
     static final float eps = 0.0001f;

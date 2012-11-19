@@ -17,6 +17,10 @@
 package com.threeDBJ.puzzleDroid;
 
 import android.util.Log;
+import com.threeDBJ.MGraphicsLib.GLVertex;
+import com.threeDBJ.MGraphicsLib.GLShape;
+import com.threeDBJ.MGraphicsLib.GLFace;
+import com.threeDBJ.MGraphicsLib.Vec3;
 
 public class Cube extends GLShape {
 

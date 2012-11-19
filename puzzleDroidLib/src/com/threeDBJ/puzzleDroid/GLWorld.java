@@ -24,6 +24,13 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 import android.opengl.GLU;
 
+import com.threeDBJ.MGraphicsLib.GLEnvironment;
+import com.threeDBJ.MGraphicsLib.Quaternion;
+import com.threeDBJ.MGraphicsLib.Mat4;
+import com.threeDBJ.MGraphicsLib.Mat3;
+import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.ArcBall;
+
 public class GLWorld extends GLEnvironment {
 
     public static float radToDeg = 180f / (float)Math.PI;
