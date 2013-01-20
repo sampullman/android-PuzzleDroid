@@ -52,7 +52,7 @@ public class CubeMenu extends GLEnvironment {
 
     TextureStateView toggler;
     TextureView menuView;
-    TextureTimer timer;
+    public TextureTimer timer;
     TextureTextView timerText, cubeText, sliderText;
     TextureButton showTimer, resetTimer, scrambleCube, resetCube;
     TextureSlider slider;
@@ -297,7 +297,7 @@ public class CubeMenu extends GLEnvironment {
 	if(restoreStartTimer) {
 	    showingTimer = true;
 	    timer.start();
-	    showTimer.setText("On");
+	    showTimer.setText("Off");
 	}
 	restoreTime = 0;
 	restoreStartTimer = false;
@@ -333,13 +333,13 @@ public class CubeMenu extends GLEnvironment {
 
     public void pause() {
 	if(timer != null) {
-	    timer.pause(true);
+	    timer.pause();
 	}
     }
 
     public void resume() {
 	if(timer != null) {
-	    timer.pause(false);
+	    timer.resume();
 	}
     }
 
@@ -407,7 +407,7 @@ public class CubeMenu extends GLEnvironment {
 	if(restoreStartTimer) {
 	    showingTimer = true;
 	    timer.start();
-	    showTimer.setText("On");
+	    showTimer.setText("Off");
 	}
 	restoreTime = 0;
 	restoreStartTimer = false;

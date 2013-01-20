@@ -36,19 +36,25 @@ public class cubeView extends GLSurfaceView {
 	mWorld = new GLWorld();
     }
 
-    public void save(SharedPreferences prefs) {
-	rCube.save(prefs);
-	mMenu.save(prefs);
-    }
-
-    public void restore(SharedPreferences prefs) {
+    public void initialize(SharedPreferences prefs) {
 	rCube = new RubeCube(mWorld, prefs.getInt("dim", 3));
 	mMenu = new CubeMenu(rCube, font);
-
 	_renderer = new CubeRenderer(getContext(), font, mWorld, rCube, mMenu, prefs);
 	rCube.setRenderer(_renderer);
 	mWorld.setRubeCube(rCube);
 	setRenderer(_renderer);
+    }
+
+    public void save(SharedPreferences prefs) {
+	rCube.save(prefs);
+	mMenu.save(prefs);
+	mMenu.timer.stop();
+    }
+
+    public void restore(SharedPreferences prefs) {
+	if(prefs.getBoolean("timer_started", false) && _renderer.GLDataLoaded) {
+	    mMenu.timer.start();
+	}
     }
 
     @Override

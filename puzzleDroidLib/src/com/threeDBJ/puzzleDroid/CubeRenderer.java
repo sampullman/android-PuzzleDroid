@@ -26,7 +26,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     public static float[] pointInPlane = new float[16];
 
     float xMin, xMax, yMin, yMax;
-    boolean worldBoundsSet = false;
+    public boolean worldBoundsSet=false, GLDataLoaded=false;
 
     private GLWorld mWorld;
     private CubeMenu menu;
@@ -67,14 +67,15 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 	mTextureFont.init(gl, context);
 	if(prefs.getBoolean("saved", false)) {
 	    rCube.init();
-	    rCube.restore(prefs);
 	    menu.setRestore(prefs);
+	    rCube.restore(prefs);
 	} else {
 	    rCube.init();
 	    rCube.setupSides();
 	}
 	rCube.world.generate();
 	mWorld.setRubeCube(rCube);
+	GLDataLoaded = true;
     }
 
     @Override

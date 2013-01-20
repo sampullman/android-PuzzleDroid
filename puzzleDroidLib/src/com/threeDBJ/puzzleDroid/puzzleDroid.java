@@ -17,6 +17,7 @@ public class puzzleDroid extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 	cv = (cubeView) findViewById(R.id.cubeView);
+	cv.initialize(PreferenceManager.getDefaultSharedPreferences(this));
     }
 
     @Override
