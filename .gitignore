@@ -1,19 +1,42 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+
 # Emacs autosave files
 *~
 #*#
 
-# Files for the dex VM
-*.dex
+# Log Files
+*.log
 
-# Java class files
-*.class
+# Android Studio Navigation editor temp files
+.navigation/
 
-# Generated files
-bin/
-gen/
+# Android Studio captures folder
+captures/
 
- # Local configuration file
-local.properties
+# Android Studio / IntelliJ IDEA 
+*.iws
+*.iml
+.idea/libraries
+.idea/misc.xml
+.idea/tasks.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/gradle.xml
+.idea/modules.xml
+.idea/inspectionProfiles/
+.idea/copyright/
+.idea/encodings.xml
+.idea/codeStyleSettings.xml
+.idea/compiler.xml
 
-# Some built application files
-*.ap_
+# Mac and Windows folder settings
+.DS_Store
+desktop.ini
