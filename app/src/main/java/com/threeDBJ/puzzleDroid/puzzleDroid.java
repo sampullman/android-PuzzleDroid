@@ -1,44 +1,40 @@
 package com.threeDBJ.puzzleDroid;
 
 import android.app.Activity;
-import android.os.Bundle;
-import android.view.View;
-import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 public class puzzleDroid extends Activity {
-
+    SharedPreferences prefs;
     cubeView cv;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-	cv = (cubeView) findViewById(R.id.cubeView);
-	cv.initialize(PreferenceManager.getDefaultSharedPreferences(this));
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        cv = (cubeView) findViewById(R.id.cubeView);
+        cv.initialize(prefs);
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-	super.onSaveInstanceState(savedInstanceState);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
     public void onPause() {
-	super.onPause();
-	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	cv.save(prefs);
-	cv.onPause();
+        super.onPause();
+        cv.save(prefs);
+        cv.onPause();
     }
 
     @Override
     public void onResume() {
-	super.onResume();
-	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	cv.restore(prefs);
-	cv.onResume();
+        super.onResume();
+        cv.restore(prefs);
+        cv.onResume();
     }
 
 }

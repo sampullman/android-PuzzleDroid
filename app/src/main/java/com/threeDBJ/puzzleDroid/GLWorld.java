@@ -17,25 +17,22 @@
 package com.threeDBJ.puzzleDroid;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.MotionEvent;
+
+import com.threeDBJ.MGraphicsLib.ArcBall;
+import com.threeDBJ.MGraphicsLib.GLEnvironment;
+import com.threeDBJ.MGraphicsLib.Mat3;
+import com.threeDBJ.MGraphicsLib.Mat4;
+import com.threeDBJ.MGraphicsLib.Quaternion;
+import com.threeDBJ.MGraphicsLib.Vec3;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
-import android.opengl.GLU;
-
-import com.threeDBJ.MGraphicsLib.GLEnvironment;
-import com.threeDBJ.MGraphicsLib.Quaternion;
-import com.threeDBJ.MGraphicsLib.Mat4;
-import com.threeDBJ.MGraphicsLib.Mat3;
-import com.threeDBJ.MGraphicsLib.Vec3;
-import com.threeDBJ.MGraphicsLib.ArcBall;
 
 public class GLWorld extends GLEnvironment {
 
-    public static float radToDeg = 180f / (float)Math.PI;
+    public static float radToDeg = 180f / (float) Math.PI;
 
-    RubeCube cube;
+    private RubeCube cube;
 
     public float ztrans = 0f;
 
@@ -48,83 +45,83 @@ public class GLWorld extends GLEnvironment {
     Mat3 thisRot = new Mat3();
     Vec3 startPos = new Vec3(), curPos = new Vec3();
     ArcBall arcBall = new ArcBall();
-    float scale=1f;
+    float scale = 1f;
     boolean paused = false;
 
     public void GLWorld() {
-	transScale.setScale(0.5f, 0.5f, 0.5f);
+        transScale.setScale(0.5f, 0.5f, 0.5f);
     }
 
     public void init(GL11 gl, Context c) {
-	//setTexture(gl, c, R.drawable.cube_texture);
+        //setTexture(gl, c, R.drawable.cube_texture);
     }
 
     public void setRubeCube(RubeCube cube) {
-	this.cube = cube;
+        this.cube = cube;
     }
 
     public void pauseCube(boolean pause) {
-	this.paused = pause;
+        this.paused = pause;
     }
 
     public void draw(GL11 gl) {
-	super.draw(gl);
-	//gl.glBlendFunc( gl.GL_ONE, gl.GL_SRC_ALPHA );
-	gl.glDepthFunc(GL11.GL_LEQUAL);
+        super.draw(gl);
+        //gl.glBlendFunc( gl.GL_ONE, gl.GL_SRC_ALPHA );
+        gl.glDepthFunc(GL11.GL_LEQUAL);
 
-	gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-	gl.glPushMatrix();
-	gl.glScalef(scale, scale, scale);
-	gl.glMultMatrixf(rotate.val, 0);
-	if(!paused) {
-	    cube.animate();
-	    //gl.glBindTexture(GL11.GL_TEXTURE_2D, mTexture.id);
-	    mColorBuffer.position(0);
-	    mTextureBuffer.position(0);
-	    mVertexBuffer.position(0);
-	    mIndexBuffer.position(0);
-	    gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-	    gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-	    gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, mTextureBuffer);
-	    gl.glDrawElements(GL10.GL_TRIANGLES, mIndexCount, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
-	}
-	gl.glPopMatrix();
+        gl.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+        gl.glPushMatrix();
+        gl.glScalef(scale, scale, scale);
+        gl.glMultMatrixf(rotate.val, 0);
+        if (!paused) {
+            cube.animate();
+            //gl.glBindTexture(GL11.GL_TEXTURE_2D, mTexture.id);
+            mColorBuffer.position(0);
+            mTextureBuffer.position(0);
+            mVertexBuffer.position(0);
+            mIndexBuffer.position(0);
+            gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+            gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
+            gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, mTextureBuffer);
+            gl.glDrawElements(GL10.GL_TRIANGLES, mIndexCount, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
+        }
+        gl.glPopMatrix();
     }
 
     public void generate() {
-	super.generate();
-	int n=0;
-	for(int i=0;i<mTextureBuffer.capacity();i+=8) {
-	    if(mTextureBuffer.get(i) == 0f) n+=1;
-	    //Log.e("Cube", mTextureBuffer.get(i)+" "+mTextureBuffer.get(i+1)+" "+mTextureBuffer.get(i+2)+" "+mTextureBuffer.get(i+3)+" "+
-	    //	  mTextureBuffer.get(i+4)+" "+mTextureBuffer.get(i+5)+" "+mTextureBuffer.get(i+6)+" "+mTextureBuffer.get(i+7));
-	}
+        super.generate();
+        int n = 0;
+        for (int i = 0; i < mTextureBuffer.capacity(); i += 8) {
+            if (mTextureBuffer.get(i) == 0f) n += 1;
+            //Log.e("Cube", mTextureBuffer.get(i)+" "+mTextureBuffer.get(i+1)+" "+mTextureBuffer.get(i+2)+" "+mTextureBuffer.get(i+3)+" "+
+            //	  mTextureBuffer.get(i+4)+" "+mTextureBuffer.get(i+5)+" "+mTextureBuffer.get(i+6)+" "+mTextureBuffer.get(i+7));
+        }
     }
 
     public void dragStart(float x, float y) {
-	lastRot = thisRot;
-	arcBall.dragStart(x, y);
+        lastRot = thisRot;
+        arcBall.dragStart(x, y);
     }
 
     public void drag(float x, float y) {
-	Quaternion q = arcBall.drag(x, y);
-	startQuat.mulLeft(q);
-	rotate.set(startQuat);
+        Quaternion q = arcBall.drag(x, y);
+        startQuat.mulLeft(q);
+        rotate.set(startQuat);
     }
 
     public void setDimensions(int w, int h) {
-	super.setDimensions(w, h);
-	arcBall.setDimensions(w, h);
+        super.setDimensions(w, h);
+        arcBall.setDimensions(w, h);
     }
 
     public void translate(float x, float y, float z) {
-	transScale.setTranslation(x, y, z);
+        transScale.setTranslation(x, y, z);
     }
 
     public void scale(float m) {
-	scale *= m;
-	if(scale < 0.2f) scale = 0.2f;
-	if(scale > 1.5f) scale = 1.5f;
+        scale *= m;
+        if (scale < 0.2f) scale = 0.2f;
+        if (scale > 1.5f) scale = 1.5f;
     }
 
 }
