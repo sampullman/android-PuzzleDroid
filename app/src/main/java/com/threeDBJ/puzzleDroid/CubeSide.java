@@ -1,8 +1,8 @@
 package com.threeDBJ.puzzleDroid;
 
-import com.threeDBJ.MGraphicsLib.Mat4;
-import com.threeDBJ.MGraphicsLib.Vec2;
-import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.math.Mat4;
+import com.threeDBJ.MGraphicsLib.math.Vec2;
+import com.threeDBJ.MGraphicsLib.math.Vec3;
 
 public class CubeSide {
 

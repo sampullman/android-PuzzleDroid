@@ -7,17 +7,17 @@ import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.GLColor;
 import com.threeDBJ.MGraphicsLib.GLEnvironment;
-import com.threeDBJ.MGraphicsLib.OnValueChangedListener;
-import com.threeDBJ.MGraphicsLib.TextureButton;
-import com.threeDBJ.MGraphicsLib.TextureClickListener;
-import com.threeDBJ.MGraphicsLib.TextureFont;
-import com.threeDBJ.MGraphicsLib.TextureSlider;
-import com.threeDBJ.MGraphicsLib.TextureStateView;
-import com.threeDBJ.MGraphicsLib.TextureTextView;
-import com.threeDBJ.MGraphicsLib.TextureTimer;
-import com.threeDBJ.MGraphicsLib.TextureView;
-import com.threeDBJ.MGraphicsLib.TranslateAnimation;
-import com.threeDBJ.MGraphicsLib.Vec2;
+import com.threeDBJ.MGraphicsLib.math.Vec2;
+import com.threeDBJ.MGraphicsLib.texture.OnValueChangedListener;
+import com.threeDBJ.MGraphicsLib.texture.TextureButton;
+import com.threeDBJ.MGraphicsLib.texture.TextureClickListener;
+import com.threeDBJ.MGraphicsLib.texture.TextureFont;
+import com.threeDBJ.MGraphicsLib.texture.TextureSlider;
+import com.threeDBJ.MGraphicsLib.texture.TextureStateView;
+import com.threeDBJ.MGraphicsLib.texture.TextureTextView;
+import com.threeDBJ.MGraphicsLib.texture.TextureTimer;
+import com.threeDBJ.MGraphicsLib.texture.TextureView;
+import com.threeDBJ.MGraphicsLib.texture.TranslateAnimation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

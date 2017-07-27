@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
-import com.threeDBJ.MGraphicsLib.TextureFont;
-import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.math.Vec3;
+import com.threeDBJ.MGraphicsLib.texture.TextureFont;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

@@ -20,10 +20,10 @@ import android.content.Context;
 
 import com.threeDBJ.MGraphicsLib.ArcBall;
 import com.threeDBJ.MGraphicsLib.GLEnvironment;
-import com.threeDBJ.MGraphicsLib.Mat3;
-import com.threeDBJ.MGraphicsLib.Mat4;
-import com.threeDBJ.MGraphicsLib.Quaternion;
-import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.math.Mat3;
+import com.threeDBJ.MGraphicsLib.math.Mat4;
+import com.threeDBJ.MGraphicsLib.math.Quaternion;
+import com.threeDBJ.MGraphicsLib.math.Vec3;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;

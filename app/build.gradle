@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.threeDBJ.MGraphicsLib:mgraphicslib:1.0'
+    compile 'com.threeDBJ.MGraphicsLib:mgraphicslib:1.0.1@aar'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     androidTestImplementation ('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

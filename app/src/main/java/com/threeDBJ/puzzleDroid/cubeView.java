@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
-import com.threeDBJ.MGraphicsLib.TextureFont;
+import com.threeDBJ.MGraphicsLib.texture.TextureFont;
 
 public class cubeView extends GLSurfaceView {
 

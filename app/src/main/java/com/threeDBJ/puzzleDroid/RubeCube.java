@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.GLColor;
-import com.threeDBJ.MGraphicsLib.Vec2;
-import com.threeDBJ.MGraphicsLib.Vec3;
+import com.threeDBJ.MGraphicsLib.math.Vec2;
+import com.threeDBJ.MGraphicsLib.math.Vec3;
 
 import java.util.Random;
 
@@ -583,7 +583,7 @@ public class RubeCube {
                     y1 = y2;
                 } else if (mode == ZOOM) {
         /*
-		float x1 = e.getX(0);
+        float x1 = e.getX(0);
 		float x2 = e.getX(1);
 		float y1 = e.getY(0);
 		float y2 = e.getY(1);
