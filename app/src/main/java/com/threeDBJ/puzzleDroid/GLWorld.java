@@ -93,7 +93,7 @@ public class GLWorld extends GLEnvironment {
         int n = 0;
         for (int i = 0; i < mTextureBuffer.capacity(); i += 8) {
             if (mTextureBuffer.get(i) == 0f) n += 1;
-            //Log.e("Cube", mTextureBuffer.get(i)+" "+mTextureBuffer.get(i+1)+" "+mTextureBuffer.get(i+2)+" "+mTextureBuffer.get(i+3)+" "+
+            //Timber.e("Cube", mTextureBuffer.get(i)+" "+mTextureBuffer.get(i+1)+" "+mTextureBuffer.get(i+2)+" "+mTextureBuffer.get(i+3)+" "+
             //	  mTextureBuffer.get(i+4)+" "+mTextureBuffer.get(i+5)+" "+mTextureBuffer.get(i+6)+" "+mTextureBuffer.get(i+7));
         }
     }

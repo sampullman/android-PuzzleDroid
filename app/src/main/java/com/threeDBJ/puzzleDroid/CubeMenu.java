@@ -24,6 +24,8 @@ import java.util.Arrays;
 
 import javax.microedition.khronos.opengles.GL11;
 
+import timber.log.Timber;
+
 public class CubeMenu extends GLEnvironment {
 
     static final int NONE = 0, SINGLE_TOUCH = 1, MULTI_TOUCH = 2;
@@ -151,7 +153,7 @@ public class CubeMenu extends GLEnvironment {
         this.xMax = xMax;
         this.yMin = yMin;
         this.yMax = yMax;
-        Log.e("Cube", xMin + " " + xMax + " " + yMin + " " + yMax);
+        Timber.d("Cube %f %f %f %f", xMin, xMax, yMin, yMax);
         float z = 1f;
         float rat = (xMax - xMin) / (yMax - yMin);
         float fRat = (rat + 1f) / 2f;

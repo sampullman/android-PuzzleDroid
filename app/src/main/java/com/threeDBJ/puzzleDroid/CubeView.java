@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
 
+import timber.log.Timber;
+
 public class CubeView extends GLSurfaceView {
 
     private CubeRenderer _renderer;
@@ -25,7 +27,7 @@ public class CubeView extends GLSurfaceView {
             mMenu.setDimensions(w, h);
             //_renderer.worldBoundsSet = false;
         }
-        Log.e("Cube-onSizeChanged", w + " " + h);
+        Timber.d("onSizeChanged %d %d", w, h);
     }
 
     public CubeView(Context context, AttributeSet attrs) {
