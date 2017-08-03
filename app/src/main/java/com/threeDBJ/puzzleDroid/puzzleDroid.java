@@ -7,15 +7,15 @@ import android.preference.PreferenceManager;
 
 public class puzzleDroid extends Activity {
     SharedPreferences prefs;
-    cubeView cv;
+    CubeView cubeView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        cv = (cubeView) findViewById(R.id.cubeView);
-        cv.initialize(prefs);
+        cubeView = new CubeView(this, null);
+        cubeView.initialize(prefs);
+        setContentView(cubeView);
     }
 
     @Override
@@ -26,15 +26,15 @@ public class puzzleDroid extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        cv.save(prefs);
-        cv.onPause();
+        cubeView.save(prefs);
+        cubeView.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        cv.restore(prefs);
-        cv.onResume();
+        cubeView.restore(prefs);
+        cubeView.onResume();
     }
 
 }

@@ -9,42 +9,42 @@ import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
 
-public class cubeView extends GLSurfaceView {
+public class CubeView extends GLSurfaceView {
 
     private CubeRenderer _renderer;
     TextureFont font;
-    RubeCube rCube;
-    GLWorld mWorld;
+    RubeCube cube;
+    GLWorld world;
     CubeMenu mMenu;
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (mWorld != null) {
-            mWorld.setDimensions(w, h);
+        if (world != null) {
+            world.setDimensions(w, h);
             mMenu.setDimensions(w, h);
             //_renderer.worldBoundsSet = false;
         }
         Log.e("Cube-onSizeChanged", w + " " + h);
     }
 
-    public cubeView(Context context, AttributeSet attrs) {
+    public CubeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         font = new TextureFont(getContext(), R.drawable.roboto_regular, "roboto_regular_dims.txt");
-        mWorld = new GLWorld();
+        world = new GLWorld();
     }
 
     public void initialize(SharedPreferences prefs) {
-        rCube = new RubeCube(mWorld, prefs.getInt("dim", 3));
-        mMenu = new CubeMenu(rCube, font);
-        _renderer = new CubeRenderer(getContext(), font, mWorld, rCube, mMenu, prefs);
-        rCube.setRenderer(_renderer);
-        mWorld.setRubeCube(rCube);
+        cube = new RubeCube(world, prefs.getInt("dim", 3));
+        mMenu = new CubeMenu(cube, font);
+        _renderer = new CubeRenderer(getContext(), font, world, cube, mMenu, prefs);
+        cube.setRenderer(_renderer);
+        world.setRubeCube(cube);
         setRenderer(_renderer);
     }
 
     public void save(SharedPreferences prefs) {
-        rCube.save(prefs);
+        cube.save(prefs);
         mMenu.save(prefs);
         mMenu.timer.stop();
     }
@@ -67,7 +67,7 @@ public class cubeView extends GLSurfaceView {
 
     public boolean onTouchEvent(final MotionEvent e) {
         if (!mMenu.handleTouch(e)) {
-            rCube.handleTouch(e);
+            cube.handleTouch(e);
         }
         return true;
     }
