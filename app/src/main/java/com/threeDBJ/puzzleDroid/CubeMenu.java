@@ -2,7 +2,6 @@ package com.threeDBJ.puzzleDroid;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.GLColor;
@@ -18,6 +17,7 @@ import com.threeDBJ.MGraphicsLib.texture.TextureTextView;
 import com.threeDBJ.MGraphicsLib.texture.TextureTimer;
 import com.threeDBJ.MGraphicsLib.texture.TextureView;
 import com.threeDBJ.MGraphicsLib.texture.TranslateAnimation;
+import com.threeDBJ.puzzleDroid.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,13 +28,9 @@ import timber.log.Timber;
 
 public class CubeMenu extends GLEnvironment {
 
-    static final int NONE = 0, SINGLE_TOUCH = 1, MULTI_TOUCH = 2;
+    private static final int NONE = 0, SINGLE_TOUCH = 1, MULTI_TOUCH = 2;
 
-    float MENU_HEIGHT, MENU_WIDTH;
-
-    ArrayList<TextureView> items = new ArrayList<TextureView>();
-
-    public static final int HIDDEN = 0, SHOWING = 1;
+    private float MENU_HEIGHT, MENU_WIDTH;
 
     private RubeCube cube;
 
@@ -69,7 +65,7 @@ public class CubeMenu extends GLEnvironment {
         scrambleCube = new TextureButton(mFont);
         resetCube = new TextureButton(mFont);
         //int[] sliderVals = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-        slider = new TextureSlider(new ArrayList(Arrays.asList(2, 3, 4, 5, 6, 7, 8)));
+        slider = new TextureSlider(new ArrayList<>(Arrays.asList(2, 3, 4, 5, 6, 7, 8)));
         generate();
         enableTextures();
     }
@@ -389,10 +385,7 @@ public class CubeMenu extends GLEnvironment {
     }
 
     public void save(SharedPreferences prefs) {
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putInt("timer_time", timer.getTime());
-        edit.putBoolean("timer_started", timer.started || timer.paused);
-        edit.commit();
+        Util.saveTimerTime(prefs, timer.getTime(), timer.started || timer.paused);
     }
 
     public void restore() {
@@ -410,9 +403,9 @@ public class CubeMenu extends GLEnvironment {
     }
 
     public void setRestore(SharedPreferences prefs) {
-        restoreTime = prefs.getInt("timer_time", 0);
-        restoreStartTimer = prefs.getBoolean("timer_started", false);
-        restoreCubeDim = prefs.getInt("dim", 3);
+        restoreTime = Util.getTimerTime(prefs);
+        restoreStartTimer = Util.getTimerStarted(prefs);
+        restoreCubeDim = Util.getDimension(prefs);
         restoreOnSetBounds = true;
     }
 

@@ -11,7 +11,7 @@
         android:name="com.threeDBJ.puzzleDroid.PuzzleDroidApp">
 
         <activity
-            android:name=".puzzleDroid"
+            android:name=".PuzzleDroidActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">

@@ -7,6 +7,7 @@ import android.opengl.GLU;
 
 import com.threeDBJ.MGraphicsLib.math.Vec3;
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
+import com.threeDBJ.puzzleDroid.util.Util;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -62,7 +63,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         menu.init(gl, context);
         mWorld.init(gl, context);
         mTextureFont.init(gl, context);
-        if (prefs.getBoolean("saved", false)) {
+        if (Util.dimensionSaved(prefs)) {
             rCube.init();
             menu.setRestore(prefs);
             rCube.restore(prefs);

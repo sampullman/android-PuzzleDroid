@@ -4,16 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
+import com.threeDBJ.puzzleDroid.util.Util;
 
 import timber.log.Timber;
 
 public class CubeView extends GLSurfaceView {
 
-    private CubeRenderer _renderer;
+    private CubeRenderer renderer;
     TextureFont font;
     RubeCube cube;
     GLWorld world;
@@ -25,9 +25,13 @@ public class CubeView extends GLSurfaceView {
         if (world != null) {
             world.setDimensions(w, h);
             mMenu.setDimensions(w, h);
-            //_renderer.worldBoundsSet = false;
+            //renderer.worldBoundsSet = false;
         }
         Timber.d("onSizeChanged %d %d", w, h);
+    }
+
+    public CubeView(Context context) {
+        this(context, null);
     }
 
     public CubeView(Context context, AttributeSet attrs) {
@@ -37,12 +41,12 @@ public class CubeView extends GLSurfaceView {
     }
 
     public void initialize(SharedPreferences prefs) {
-        cube = new RubeCube(world, prefs.getInt("dim", 3));
+        cube = new RubeCube(world, Util.getDimension(prefs));
         mMenu = new CubeMenu(cube, font);
-        _renderer = new CubeRenderer(getContext(), font, world, cube, mMenu, prefs);
-        cube.setRenderer(_renderer);
+        renderer = new CubeRenderer(getContext(), font, world, cube, mMenu, prefs);
+        cube.setRenderer(renderer);
         world.setRubeCube(cube);
-        setRenderer(_renderer);
+        setRenderer(renderer);
     }
 
     public void save(SharedPreferences prefs) {
@@ -52,7 +56,7 @@ public class CubeView extends GLSurfaceView {
     }
 
     public void restore(SharedPreferences prefs) {
-        if (prefs.getBoolean("timer_started", false) && _renderer.GLDataLoaded) {
+        if (prefs.getBoolean("timer_started", false) && renderer.GLDataLoaded) {
             mMenu.timer.start();
         }
     }

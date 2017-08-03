@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
-public class puzzleDroid extends Activity {
+public class PuzzleDroidActivity extends Activity {
     SharedPreferences prefs;
     CubeView cubeView;
 
@@ -13,7 +13,7 @@ public class puzzleDroid extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        cubeView = new CubeView(this, null);
+        cubeView = new CubeView(this);
         cubeView.initialize(prefs);
         setContentView(cubeView);
     }

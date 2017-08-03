@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import com.threeDBJ.MGraphicsLib.GLColor;
 import com.threeDBJ.MGraphicsLib.math.Vec2;
 import com.threeDBJ.MGraphicsLib.math.Vec3;
+import com.threeDBJ.puzzleDroid.util.Util;
 
 import java.util.Random;
 
@@ -723,9 +724,7 @@ public class RubeCube {
                 }
             }
         }
-        edit.putInt("dim", dim);
-        edit.putBoolean("saved", true);
-        edit.commit();
+        Util.saveDimension(prefs, dim);
     }
 
     public void restore(SharedPreferences prefs) {
