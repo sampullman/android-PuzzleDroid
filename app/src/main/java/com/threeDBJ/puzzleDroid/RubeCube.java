@@ -15,9 +15,6 @@ public class RubeCube {
 
     public static float MAX_SPIN_RATE = 0.08f;
 
-    // current permutation of starting position
-    int[] permutation;
-
     private final Handler handler = new Handler();
     GLWorld world;
     private CubeRenderer mRenderer;
@@ -27,21 +24,19 @@ public class RubeCube {
     private CubeSide front, back, left, right, top, bottom, curSide;
     private Layer[] lx, ly, lz;
     private Layer curLayer;
-    private Vec2 hitVec, dragVec, vel, dir = new Vec2();
+    private Vec2 hitVec, dragVec, dir = new Vec2();
     private boolean spinEnabled = true;
     private GLColor[] colors = new GLColor[6];
 
     // for random cube movements
     private final Random random = new Random(System.currentTimeMillis());
 
-    private float x1 = 0, x2 = 0, y1 = 0, y2 = 0,
-            dx = 0, dy = 0, zdist = 0f,
-            cubeSize, space;
+    private float x1 = 0, y1 = 0, cubeSize, space;
 
     private static int NONE = 0, DRAG = 1, ZOOM = 2, SPIN = 3;
     private final float TOUCH_SCALE_FACTOR = (float) Math.PI / 180;
 
-    int mode = NONE, activePtrId = -1, dim;
+    private int mode = NONE, activePtrId = -1, dim;
 
     public RubeCube(GLWorld world, int dim) {
         this.dim = dim;
@@ -556,10 +551,10 @@ public class RubeCube {
             case MotionEvent.ACTION_MOVE: {
                 if (activePtrId < 0 || activePtrId >= e.getPointerCount()) break;
                 final int ptrInd = e.findPointerIndex(activePtrId);
-                x2 = e.getX(ptrInd);
-                y2 = e.getY(ptrInd);
-                dx = x2 - x1;
-                dy = y2 - y1;
+                float x2 = e.getX(ptrInd);
+                float y2 = e.getY(ptrInd);
+                float dx = x2 - x1;
+                float dy = y2 - y1;
                 if (mode == DRAG) {
 
                     world.drag(x2, y2);
@@ -584,7 +579,7 @@ public class RubeCube {
                 } else if (mode == SPIN && curSide != null) {
                     Vec3 newCoords = mRenderer.screenToWorld(getRatio(x2, y2));
                     Vec2 hp = curSide.getPlaneHitLoc(newCoords, new Vec3(0f, 0f, 1f), world.rotate);
-                    vel = new Vec2(hp).sub(dragVec);
+                    Vec2 vel = new Vec2(hp).sub(dragVec);
                     if (curLayer == null) {
                         dir.add(vel);
                         float xAbs = Math.abs(dir.x);
@@ -623,7 +618,7 @@ public class RubeCube {
                 float xdist1 = Math.abs(x1 - x2);
                 float ydist1 = Math.abs(y1 - y2);
                 if (xdist1 > 5f && ydist1 > 5f) {
-                    zdist = (float) Math.sqrt(x1 * x2 + y1 * y2);
+                    //zdist = (float) Math.sqrt(x1 * x2 + y1 * y2);
                     mode = ZOOM;
                 }
                 break;
@@ -672,7 +667,6 @@ public class RubeCube {
             world.mVertexBuffer = temp.mVertexBuffer;
             world.mIndexBuffer = temp.mIndexBuffer;
             world.mColorBuffer = temp.mColorBuffer;
-            //world.mTextureBuffer = temp.mTextureBuffer;
         }
     };
 

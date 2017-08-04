@@ -14,22 +14,12 @@ public class Cube extends GLShape {
     public static final int kBack = 4;
     public static final int kTop = 5;
 
-    public int face, id;
+    public int id;
     public Vec3 normal;
-    CubeSide side;
-    Layer hLayer, vLayer;
 
     public Cube(GLWorld world, float left, float bottom,
                 float back, float right, float top, float front) {
         super(world);
-        // GLVertex lbBack = addVertex(left, bottom, back);
-        // GLVertex rbBack = addVertex(right, bottom, back);
-        // GLVertex ltBack = addVertex(left, top, back);
-        // GLVertex rtBack = addVertex(right, top, back);
-        // GLVertex lbFront = addVertex(left, bottom, front);
-        // GLVertex rbFront = addVertex(right, bottom, front);
-        // GLVertex ltFront = addVertex(left, top, front);
-        // GLVertex rtFront = addVertex(right, top, front);
         GLVertex lbBack = new GLVertex(left, bottom, back);
         GLVertex rbBack = new GLVertex(right, bottom, back);
         GLVertex ltBack = new GLVertex(left, top, back);
@@ -57,25 +47,7 @@ public class Cube extends GLShape {
     }
 
     private void addCubeSide(GLVertex rb, GLVertex rt, GLVertex lb, GLVertex lt) {
-        //addFace(new GLFace(rb, rt, addVertex(lb), lt));
         addFace(new GLFace(addVertex(rb), addVertex(rt), addVertex(lb), addVertex(lt)));
-    }
-
-    public Vec3 getNormal(int face) {
-        return getFace(face).normal;
-    }
-
-    public void setSide(CubeSide side) {
-        this.side = side;
-    }
-
-    public void setLayers(Layer hLayer, Layer vLayer) {
-        this.hLayer = hLayer;
-        this.vLayer = vLayer;
-    }
-
-    public void snapToAxis() {
-        float[] euler = getRotation().getEulerAngles();
     }
 
 }

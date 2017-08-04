@@ -17,14 +17,14 @@ public class CubeView extends GLSurfaceView {
     TextureFont font;
     RubeCube cube;
     GLWorld world;
-    CubeMenu mMenu;
+    CubeMenu menu;
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (world != null) {
             world.setDimensions(w, h);
-            mMenu.setDimensions(w, h);
+            menu.setDimensions(w, h);
             //renderer.worldBoundsSet = false;
         }
         Timber.d("onSizeChanged %d %d", w, h);
@@ -42,8 +42,8 @@ public class CubeView extends GLSurfaceView {
 
     public void initialize(SharedPreferences prefs) {
         cube = new RubeCube(world, Util.getDimension(prefs));
-        mMenu = new CubeMenu(cube, font);
-        renderer = new CubeRenderer(getContext(), font, world, cube, mMenu, prefs);
+        menu = new CubeMenu(cube, font);
+        renderer = new CubeRenderer(getContext(), font, world, cube, menu, prefs);
         cube.setRenderer(renderer);
         world.setRubeCube(cube);
         setRenderer(renderer);
@@ -51,28 +51,28 @@ public class CubeView extends GLSurfaceView {
 
     public void save(SharedPreferences prefs) {
         cube.save(prefs);
-        mMenu.save(prefs);
-        mMenu.timer.stop();
+        menu.save(prefs);
+        menu.timer.stop();
     }
 
     public void restore(SharedPreferences prefs) {
-        if (prefs.getBoolean("timer_started", false) && renderer.GLDataLoaded) {
-            mMenu.timer.start();
+        if (Util.getTimerStarted(prefs) && renderer.GLDataLoaded) {
+            menu.timer.start();
         }
     }
 
     @Override
     public void onPause() {
-        mMenu.pause();
+        menu.pause();
     }
 
     @Override
     public void onResume() {
-        //mMenu.resume();
+        //menu.resume();
     }
 
     public boolean onTouchEvent(final MotionEvent e) {
-        if (!mMenu.handleTouch(e)) {
+        if (!menu.handleTouch(e)) {
             cube.handleTouch(e);
         }
         return true;

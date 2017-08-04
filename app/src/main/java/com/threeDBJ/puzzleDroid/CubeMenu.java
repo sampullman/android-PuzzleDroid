@@ -34,7 +34,7 @@ public class CubeMenu extends GLEnvironment {
 
     private RubeCube cube;
 
-    private TextureFont mFont;
+    private TextureFont font;
 
     private TextureStateView toggler;
     private TextureView menuView;
@@ -45,25 +45,25 @@ public class CubeMenu extends GLEnvironment {
 
     private boolean showing = false, showingTimer = false;
     private float xMin, xMax, yMin, yMax;
-    private float x1, y1, x2, y2;
+    private float x1, y1;
     private int activePtrId = -1, touchMode = NONE;
 
     private boolean restoreStartTimer = false, restoreOnSetBounds = false;
     private int restoreTime = 0, restoreCubeDim = 3;
 
-    public CubeMenu(RubeCube rCube, TextureFont font) {
-        cube = rCube;
-        mFont = font;
+    public CubeMenu(RubeCube cube, TextureFont font) {
+        this.cube = cube;
+        this.font = font;
         toggler = new TextureStateView();
         menuView = new TextureView();
-        timer = new TextureTimer(mFont);
-        timerText = new TextureTextView(mFont);
-        cubeText = new TextureTextView(mFont);
-        sliderText = new TextureTextView(mFont);
-        showTimer = new TextureButton(mFont);
-        resetTimer = new TextureButton(mFont);
-        scrambleCube = new TextureButton(mFont);
-        resetCube = new TextureButton(mFont);
+        timer = new TextureTimer(this.font);
+        timerText = new TextureTextView(this.font);
+        cubeText = new TextureTextView(this.font);
+        sliderText = new TextureTextView(this.font);
+        showTimer = new TextureButton(this.font);
+        resetTimer = new TextureButton(this.font);
+        scrambleCube = new TextureButton(this.font);
+        resetCube = new TextureButton(this.font);
         //int[] sliderVals = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
         slider = new TextureSlider(new ArrayList<>(Arrays.asList(2, 3, 4, 5, 6, 7, 8)));
         generate();
@@ -159,8 +159,6 @@ public class CubeMenu extends GLEnvironment {
         float r = l + (0.5f * 0.8f) + (0.4f * rat);
         float b = yMin + 0.05f;
         float t = b + (0.7f * 0.6f) + (0.4f * rat);
-        GLColor c = new GLColor(1f, 1f, 0);
-        GLColor black = new GLColor(0, 0, 0);
         GLColor white = new GLColor(1, 1, 1);
 
         float xPadding = (r - l) / 16f;
@@ -185,7 +183,7 @@ public class CubeMenu extends GLEnvironment {
         timerText.setTextColor(textColor);
         timerText.setTextureBounds(1f, 1f);
         timerText.setTextSize(12f * fRat);
-        tSize = mFont.measureText("Timer:", timerText.textSize);
+        tSize = font.measureText("Timer:", timerText.textSize);
         timerText.setPadding(w / 2f - tSize.x / 2f, 0, 0, h / 2f - tSize.y / 2f);
 
         w = MENU_WIDTH * 0.3f;
@@ -195,7 +193,7 @@ public class CubeMenu extends GLEnvironment {
         showTimer.setTextureBounds(1f, 1f);
         showTimer.setTextColor(textColor);
         showTimer.setTextSize(12f * fRat);
-        tSize = mFont.measureText("Of", showTimer.textSize);
+        tSize = font.measureText("Of", showTimer.textSize);
         showTimer.setPadding(w / 2f - (tSize.x / 2f + xPadding), 0, 0, h / 2f - tSize.y / 2f);
 
         w = MENU_WIDTH * 0.35f;
@@ -205,12 +203,12 @@ public class CubeMenu extends GLEnvironment {
         resetTimer.setTextureBounds(1f, 1f);
         resetTimer.setTextColor(textColor);
         resetTimer.setTextSize(12f * fRat);
-        tSize = mFont.measureText("Reset", resetTimer.textSize);
+        tSize = font.measureText("Reset", resetTimer.textSize);
         resetTimer.setPadding(w / 2f - (tSize.x / 2f + xPadding), 0, 0, h / 2f - tSize.y / 2f);
 
         float xMid = (xMax + xMin) / 2f;
         timer.setTextSize(16f * fRat);
-        tSize = mFont.measureText(timer.getTimeString(), timer.textSize);
+        tSize = font.measureText(timer.getTimeString(), timer.textSize);
         timer.setFace(xMid - tSize.x / 2f, xMid + tSize.x / 2f, yMax - (tSize.y + yPadding), yMax - yPadding, z, white);
         timer.setTextureBounds(1f, 1f);
 
@@ -223,7 +221,7 @@ public class CubeMenu extends GLEnvironment {
         cubeText.setTextColor(textColor);
         cubeText.setTextureBounds(1f, 1f);
         cubeText.setTextSize(11f * fRat);
-        tSize = mFont.measureText("Cube:", cubeText.textSize);
+        tSize = font.measureText("Cube:", cubeText.textSize);
         cubeText.setPadding(w / 2f - tSize.x / 2f, 0, 0, h / 2f - tSize.y / 2f);
 
         w = MENU_WIDTH * 0.35f;
@@ -233,7 +231,7 @@ public class CubeMenu extends GLEnvironment {
         scrambleCube.setTextureBounds(1f, 1f);
         scrambleCube.setTextColor(textColor);
         scrambleCube.setTextSize(10f * fRat);
-        tSize = mFont.measureText("Scramble", scrambleCube.textSize);
+        tSize = font.measureText("Scramble", scrambleCube.textSize);
         scrambleCube.setPadding(w / 2f - (tSize.x / 2f + xPadding), 0, 0, h / 2f - tSize.y / 2f);
 
         xl = xr + xPadding;
@@ -242,7 +240,7 @@ public class CubeMenu extends GLEnvironment {
         resetCube.setTextureBounds(1f, 1f);
         resetCube.setTextColor(textColor);
         resetCube.setTextSize(12f * fRat);
-        tSize = mFont.measureText("Reset", resetCube.textSize);
+        tSize = font.measureText("Reset", resetCube.textSize);
         resetCube.setPadding(w / 2f - (tSize.x / 2f + xPadding), 0, 0, h / 2f - tSize.y / 2f);
 
         w = MENU_WIDTH * 0.25f;
@@ -254,7 +252,7 @@ public class CubeMenu extends GLEnvironment {
         sliderText.setTextureBounds(1f, 1f);
         sliderText.setTextColor(textColor);
         sliderText.setTextSize(12f * fRat);
-        tSize = mFont.measureText("3x3", sliderText.textSize);
+        tSize = font.measureText("3x3", sliderText.textSize);
         sliderText.setPadding(w / 2f - tSize.x / 2f, 0, 0, h / 2f - tSize.y / 1.5f);
 
         w = MENU_WIDTH * 0.35f;
@@ -323,15 +321,16 @@ public class CubeMenu extends GLEnvironment {
     }
 
     public void pause() {
-        if (timer != null) {
-            timer.pause(true);
-        }
+        timer.pause(true);
     }
 
     public void resume() {
-        if (timer != null) {
-            timer.pause(false);
-        }
+        timer.pause(false);
+    }
+
+    private void resetTouch() {
+        touchMode = NONE;
+        activePtrId = -1;
     }
 
     public boolean handleTouch(MotionEvent e) {
@@ -350,16 +349,14 @@ public class CubeMenu extends GLEnvironment {
                 }
                 return menuView.handleActionDown(worldCoords);
             case MotionEvent.ACTION_UP:
-                touchMode = NONE;
-                activePtrId = -1;
+                resetTouch();
                 worldCoords = screenToWorld(x1, y1);
                 if (toggler.handleActionUp(worldCoords)) {
                     return true;
                 }
                 return menuView.handleActionUp(worldCoords);
             case MotionEvent.ACTION_CANCEL:
-                activePtrId = -1;
-                touchMode = NONE;
+                resetTouch();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (touchMode == SINGLE_TOUCH) {
@@ -368,8 +365,7 @@ public class CubeMenu extends GLEnvironment {
                     float y = e.getY(ptrInd);
                     if (touchMode == SINGLE_TOUCH) {
                         worldCoords = screenToWorld(x, y);
-                        if (toggler.handleActionMove(worldCoords)) return true;
-                        return menuView.handleActionMove(worldCoords);
+                        return toggler.handleActionMove(worldCoords) || menuView.handleActionMove(worldCoords);
                     }
                 }
                 break;
@@ -377,8 +373,9 @@ public class CubeMenu extends GLEnvironment {
                 touchMode = MULTI_TOUCH;
                 break;
             case MotionEvent.ACTION_POINTER_UP:
-                if (e.getPointerCount() == 1)
+                if (e.getPointerCount() == 1) {
                     touchMode = SINGLE_TOUCH;
+                }
                 break;
         }
         return false;

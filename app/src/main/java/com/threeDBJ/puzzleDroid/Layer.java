@@ -20,13 +20,12 @@ public class Layer {
     static public final float PI = (float) Math.PI;
     static public final float PI2 = 2f * PI;
     static public final float HALFPI = PI / 2f;
-    static public final float TODEG = 180f / PI;
-    static final int POS = 0, NEG = 1, H = 0, V = 1;
+    static final int H = 0, V = 1;
     private int type, fixInd = 21;
     int index;
-    float angle = 0f, fixAngle;
+    float angle = 0f;
+    private float fixAngle;
     private Vec3 axisVec;
-    private Quaternion localRot;
 
     public Layer(RubeCube cube, Vec3 zero, int axis, int index) {
         this.axis = axis;
@@ -76,9 +75,6 @@ public class Layer {
             fixInd += 1;
             if (fixInd == 10) {
                 cube.endLayerAnimation(axis, angle, index);
-                for (Cube c : cubes) {
-                    c.snapToAxis();
-                }
                 angle = 0f;
             }
         }
@@ -118,7 +114,7 @@ public class Layer {
         while (angle < -1f * PI) angle += PI2;
         this.angle += angle;
 
-        localRot = new Quaternion(axisVec, angle, true);
+        Quaternion localRot = new Quaternion(axisVec, angle, true);
         for (Cube cube : cubes) {
             if (cube != null) {
                 cube.animateTransform(localRot);

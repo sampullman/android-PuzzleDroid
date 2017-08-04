@@ -6,7 +6,7 @@ import com.threeDBJ.MGraphicsLib.math.Vec3;
 
 public class CubeSide {
 
-    static final float eps = 0.0001f;
+    private static final float EPS = 0.0001f;
 
     private int dim;
     int frontFace;
@@ -22,12 +22,12 @@ public class CubeSide {
         this.normal = new Vec3(xMin + xMax, yMin + yMax, zMin + zMax);
         this.normal.nor();
         this.aPoint = new Vec3(normal);
-        bounds[0] = xMin - eps;
-        bounds[1] = xMax + eps;
-        bounds[2] = yMin - eps;
-        bounds[3] = yMax + eps;
-        bounds[4] = zMin - eps;
-        bounds[5] = zMax + eps;
+        bounds[0] = xMin - EPS;
+        bounds[1] = xMax + EPS;
+        bounds[2] = yMin - EPS;
+        bounds[3] = yMax + EPS;
+        bounds[4] = zMin - EPS;
+        bounds[5] = zMax + EPS;
     }
 
     public void setHLayers(Layer[] l) {
@@ -98,8 +98,10 @@ public class CubeSide {
         hp.y = (hp.y + 1f) / 2f;
         hp.z = (hp.z + 1f) / 2f;
         Vec2 v = getPlaneValues(hp);
-        v.x = (v.x * (float) dim);
-        v.y = ((1f - v.y) * (float) dim);
+        if(v != null) {
+            v.x = (v.x * (float) dim);
+            v.y = ((1f - v.y) * (float) dim);
+        }
         return v;
     }
 
@@ -112,11 +114,8 @@ public class CubeSide {
         Vec3 p = getPointOnPlane(rotation);
         p.sub(start);
         float d = p.dot(norm) / denom;
-        if (true) {
-            return dir.mul(d).add(start);
-        } else {
-            return null;
-        }
+
+        return dir.mul(d).add(start);
     }
 
     public Vec2 getHitLoc(Vec3 start, Vec3 dir, Mat4 rotation) {
