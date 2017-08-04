@@ -1,60 +1,22 @@
-/*
- * Copyright (C) 2008 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.threeDBJ.puzzleDroid;
-
-import android.content.Context;
 
 import com.threeDBJ.MGraphicsLib.ArcBall;
 import com.threeDBJ.MGraphicsLib.GLEnvironment;
-import com.threeDBJ.MGraphicsLib.math.Mat3;
 import com.threeDBJ.MGraphicsLib.math.Mat4;
 import com.threeDBJ.MGraphicsLib.math.Quaternion;
-import com.threeDBJ.MGraphicsLib.math.Vec3;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class GLWorld extends GLEnvironment {
 
-    public static float radToDeg = 180f / (float) Math.PI;
-
     private RubeCube cube;
 
-    public float ztrans = 0f;
-
-    int drawCount = 0;
-
-    Quaternion curQuat = new Quaternion(0f, 0f, 0f, 1f);
-    Quaternion startQuat = new Quaternion(0f, 0f, 0f, 1f);
-    Mat4 rotate = new Mat4(), transScale = new Mat4();
-    Mat3 lastRot = new Mat3();
-    Mat3 thisRot = new Mat3();
-    Vec3 startPos = new Vec3(), curPos = new Vec3();
-    ArcBall arcBall = new ArcBall();
-    float scale = 1f;
-    boolean paused = false;
-
-    public void GLWorld() {
-        transScale.setScale(0.5f, 0.5f, 0.5f);
-    }
-
-    public void init(GL11 gl, Context c) {
-        //setTexture(gl, c, R.drawable.cube_texture);
-    }
+    private Quaternion startQuat = new Quaternion(0f, 0f, 0f, 1f);
+    Mat4 rotate = new Mat4();
+    private ArcBall arcBall = new ArcBall();
+    private float scale = 1f;
+    private boolean paused = false;
 
     public void setRubeCube(RubeCube cube) {
         this.cube = cube;
@@ -88,18 +50,7 @@ public class GLWorld extends GLEnvironment {
         gl.glPopMatrix();
     }
 
-    public void generate() {
-        super.generate();
-        int n = 0;
-        for (int i = 0; i < mTextureBuffer.capacity(); i += 8) {
-            if (mTextureBuffer.get(i) == 0f) n += 1;
-            //Timber.e("Cube", mTextureBuffer.get(i)+" "+mTextureBuffer.get(i+1)+" "+mTextureBuffer.get(i+2)+" "+mTextureBuffer.get(i+3)+" "+
-            //	  mTextureBuffer.get(i+4)+" "+mTextureBuffer.get(i+5)+" "+mTextureBuffer.get(i+6)+" "+mTextureBuffer.get(i+7));
-        }
-    }
-
     public void dragStart(float x, float y) {
-        lastRot = thisRot;
         arcBall.dragStart(x, y);
     }
 
@@ -112,16 +63,6 @@ public class GLWorld extends GLEnvironment {
     public void setDimensions(int w, int h) {
         super.setDimensions(w, h);
         arcBall.setDimensions(w, h);
-    }
-
-    public void translate(float x, float y, float z) {
-        transScale.setTranslation(x, y, z);
-    }
-
-    public void scale(float m) {
-        scale *= m;
-        if (scale < 0.2f) scale = 0.2f;
-        if (scale > 1.5f) scale = 1.5f;
     }
 
 }

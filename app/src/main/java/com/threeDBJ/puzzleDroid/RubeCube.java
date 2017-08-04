@@ -1,7 +1,6 @@
 package com.threeDBJ.puzzleDroid;
 
 import android.content.SharedPreferences;
-import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.view.MotionEvent;
 
@@ -17,38 +16,32 @@ public class RubeCube {
     public static float MAX_SPIN_RATE = 0.08f;
 
     // current permutation of starting position
-    int[] mPermutation;
+    int[] permutation;
 
-    Handler handler = new Handler();
-    GLSurfaceView mView;
+    private final Handler handler = new Handler();
     GLWorld world;
-    CubeRenderer mRenderer;
-    Cube[][][] cubes;
-    CubeSide[] cubeSides = new CubeSide[6];
-    int[][][] faceColors;
-    CubeSide front, back, left, right, top, bottom, curSide;
-    Layer[] lx, ly, lz;
-    Layer curLayer;
-    Vec3 coords, newCoords;
-    Vec2 hitVec, dragVec, vel, dir = new Vec2();
-    boolean spinEnabled = true;
-    GLColor[] colors = new GLColor[6];
+    private CubeRenderer mRenderer;
+    private Cube[][][] cubes;
+    private CubeSide[] cubeSides = new CubeSide[6];
+    private int[][][] faceColors;
+    private CubeSide front, back, left, right, top, bottom, curSide;
+    private Layer[] lx, ly, lz;
+    private Layer curLayer;
+    private Vec2 hitVec, dragVec, vel, dir = new Vec2();
+    private boolean spinEnabled = true;
+    private GLColor[] colors = new GLColor[6];
 
     // for random cube movements
-    Random mRandom = new Random(System.currentTimeMillis());
+    private final Random random = new Random(System.currentTimeMillis());
 
-    float x1 = 0, x2 = 0, y1 = 0, y2 = 0,
+    private float x1 = 0, x2 = 0, y1 = 0, y2 = 0,
             dx = 0, dy = 0, zdist = 0f,
-            xtrans = 0f, ytrans = 0f, ztrans = -6f, cubeSize, space;
+            cubeSize, space;
 
-    public static int NONE = 0, DRAG = 1, ZOOM = 2, SPIN = 3;
+    private static int NONE = 0, DRAG = 1, ZOOM = 2, SPIN = 3;
     private final float TOUCH_SCALE_FACTOR = (float) Math.PI / 180;
 
     int mode = NONE, activePtrId = -1, dim;
-
-    public RubeCube(GLWorld world) {
-        this(world, 3);
-    }
 
     public RubeCube(GLWorld world, int dim) {
         this.dim = dim;
@@ -96,10 +89,9 @@ public class RubeCube {
         addShapes(world);
         initSideColors();
         setupLayers();
-        world.translate(0f, 0f, getZTrans());
     }
 
-    public void addShapes(GLWorld world) {
+    private void addShapes(GLWorld world) {
         float curX, curY, curZ;
         curX = curY = curZ = -1f;
         // TODO -- scale with dim
@@ -149,7 +141,7 @@ public class RubeCube {
         }
     }
 
-    public void initSideColors() {
+    private void initSideColors() {
         int i, j, k;
         for (i = 0; i < faceColors.length; i += 1) {
             for (j = 0; j < dim; j += 1) {
@@ -160,7 +152,7 @@ public class RubeCube {
         }
     }
 
-    public void setupSides() {
+    void setupSides() {
         int i, j, k;
         // Paint back blue
         i = 0;
@@ -210,11 +202,7 @@ public class RubeCube {
         }
     }
 
-    public void setupTextures() {
-
-    }
-
-    public void setupLayers() {
+    private void setupLayers() {
         float curX, curY, curZ;
         curX = curY = curZ = -1f;
         // Record z layer
@@ -265,16 +253,12 @@ public class RubeCube {
         right.setHLayers(ly);
     }
 
-    public Vec3 getRatio(float x, float y) {
+    private Vec3 getRatio(float x, float y) {
         Vec3 w = new Vec3();
         w.x = x * world.adjustWidth;
         w.y = 1f - y * world.adjustHeight;
         w.z = 2f;
         return w;
-    }
-
-    public float getZTrans() {
-        return ztrans;
     }
 
     public void animate() {
@@ -296,11 +280,11 @@ public class RubeCube {
         float dir;
         Vec2 layerInd = new Vec2();
         for (int i = 0; i < 40; i += 1) {
-            index = mRandom.nextInt(dim);
-            dir = (float) mRandom.nextInt(2);
+            index = random.nextInt(dim);
+            dir = (float) random.nextInt(2);
             if (dir == 0f) dir = -1f;
-            s = cubeSides[mRandom.nextInt(cubeSides.length)];
-            if (mRandom.nextInt(2) == 0) {
+            s = cubeSides[random.nextInt(cubeSides.length)];
+            if (random.nextInt(2) == 0) {
                 layerInd.x = index;
                 l = s.getHLayer(layerInd);
             } else {
@@ -314,7 +298,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorSidePos(int side) {
+    private void transposeColorSidePos(int side) {
         int[][] newSide = new int[dim][dim];
         for (int i = 0; i < dim; i += 1) {
             for (int j = 0; j < dim; j += 1) {
@@ -324,7 +308,7 @@ public class RubeCube {
         faceColors[side] = newSide;
     }
 
-    public void transposeColorSideNeg(int side) {
+    private void transposeColorSideNeg(int side) {
         int[][] newSide = new int[dim][dim];
         for (int i = 0; i < dim; i += 1) {
             for (int j = 0; j < dim; j += 1) {
@@ -334,7 +318,7 @@ public class RubeCube {
         faceColors[side] = newSide;
     }
 
-    public void transposeColorsXPos(int index) {
+    private void transposeColorsXPos(int index) {
         int temp1, temp2;
         for (int i = 0; i < dim; i += 1) {
             temp1 = faceColors[Cube.kFront][dim - i - 1][index];
@@ -352,7 +336,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorsXNeg(int index) {
+    private void transposeColorsXNeg(int index) {
         int temp1, temp2;
         for (int i = 0; i < dim; i += 1) {
             temp1 = faceColors[Cube.kFront][dim - i - 1][index];
@@ -370,7 +354,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorsYPos(int index) {
+    private void transposeColorsYPos(int index) {
         int temp1, temp2;
         for (int i = 0; i < dim; i += 1) {
             temp1 = faceColors[Cube.kFront][index][i];
@@ -388,7 +372,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorsYNeg(int index) {
+    private void transposeColorsYNeg(int index) {
         int temp1, temp2;
         // Stopped here, figure out the side transposition
         for (int i = 0; i < dim; i += 1) {
@@ -407,7 +391,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorsZNeg(int index) {
+    private void transposeColorsZNeg(int index) {
         int temp1, temp2;
         for (int i = 0; i < dim; i += 1) {
             temp1 = faceColors[Cube.kTop][index][i];
@@ -425,7 +409,7 @@ public class RubeCube {
         }
     }
 
-    public void transposeColorsZPos(int index) {
+    private void transposeColorsZPos(int index) {
         int temp1, temp2;
         for (int i = 0; i < dim; i += 1) {
             temp1 = faceColors[Cube.kTop][index][i];
@@ -443,9 +427,9 @@ public class RubeCube {
         }
     }
 
-    public void transposeCubes(int nTurns, int axis, int index) {
+    private void transposeCubes(int nTurns, int axis, int index) {
         Cube[][] t = new Cube[dim][dim];
-        int a1, a2, m1, m2, n;
+        int n;
         if (nTurns > 0) {
             n = -1;
         } else {
@@ -556,7 +540,7 @@ public class RubeCube {
                 mode = DRAG;
                 activePtrId = e.getPointerId(0);
                 world.dragStart(x1, y1);
-                coords = mRenderer.screenToWorld(getRatio(x1, y1));
+                Vec3 coords = mRenderer.screenToWorld(getRatio(x1, y1));
                 if (!spinEnabled) break;
                 for (int i = 0; i < cubeSides.length; i += 1) {
                     hitVec = cubeSides[i].getHitLoc(coords, new Vec3(0f, 0f, 1f), world.rotate);
@@ -598,7 +582,7 @@ public class RubeCube {
 		zdist = dist;
 		*/
                 } else if (mode == SPIN && curSide != null) {
-                    newCoords = mRenderer.screenToWorld(getRatio(x2, y2));
+                    Vec3 newCoords = mRenderer.screenToWorld(getRatio(x2, y2));
                     Vec2 hp = curSide.getPlaneHitLoc(newCoords, new Vec3(0f, 0f, 1f), world.rotate);
                     vel = new Vec2(hp).sub(dragVec);
                     if (curLayer == null) {
@@ -626,7 +610,6 @@ public class RubeCube {
                     if (curLayer != null) {
                         curLayer.drag(vel, curSide.frontFace);
                     }
-                    coords = newCoords;
                 }
                 break;
             }
@@ -676,7 +659,7 @@ public class RubeCube {
         }
     }
 
-    final Runnable resetWorld = new Runnable() {
+    private final Runnable resetWorld = new Runnable() {
         public void run() {
             GLWorld temp = new GLWorld();
             addShapes(temp);
@@ -693,7 +676,7 @@ public class RubeCube {
         }
     };
 
-    final Runnable setWorldDim = new Runnable() {
+    private final Runnable setWorldDim = new Runnable() {
         public void run() {
             world.pauseCube(true);
             world.clear();
@@ -705,18 +688,9 @@ public class RubeCube {
         }
     };
 
-    public int getColorInd(GLColor c, int def) {
-        for (int i = 0; i < colors.length; i += 1) {
-            if (c.equals(colors[i])) return i;
-        }
-        return def;
-    }
-
     public void save(SharedPreferences prefs) {
         SharedPreferences.Editor edit = prefs.edit();
         int i, j, k;
-        GLColor c;
-        int n = 0;
         for (i = 0; i < faceColors.length; i += 1) {
             for (j = 0; j < dim; j += 1) {
                 for (k = 0; k < dim; k += 1) {
@@ -724,6 +698,7 @@ public class RubeCube {
                 }
             }
         }
+        edit.apply();
         Util.saveDimension(prefs, dim);
     }
 

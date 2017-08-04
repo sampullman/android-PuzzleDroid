@@ -61,7 +61,6 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 
         gl.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_NICEST);
         menu.init(gl, context);
-        mWorld.init(gl, context);
         mTextureFont.init(gl, context);
         if (Util.dimensionSaved(prefs)) {
             rCube.init();
