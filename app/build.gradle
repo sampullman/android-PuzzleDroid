@@ -1,9 +1,5 @@
 apply plugin: 'com.android.application'
 
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
@@ -21,16 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
-
-repositories {
-    maven {
-        url "http://localhost:8081/artifactory/libs-release-local"
-        credentials {
-            username = "${artifactory_username}"
-            password = "${artifactory_password}"
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['libs']
         }
     }
+
 }
 
 dependencies {
@@ -38,9 +31,11 @@ dependencies {
     androidTestImplementation ('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.threeDBJ.MGraphicsLib:mgraphicslib:1.0.1@aar'
-    compile 'com.jakewharton.timber:timber:4.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.android.support:appcompat-v7:26.0.0'
     testImplementation 'junit:junit:4.12'
+
+    compile 'com.jakewharton.timber:timber:4.5.1'
+    compile 'com.android.support:appcompat-v7:26.0.0'
+
+    compile 'com.github.sampullman:android-mgraphicslib:master-SNAPSHOT'
 }
