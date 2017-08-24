@@ -42,7 +42,7 @@ public class Cube extends GLShape {
         // Top
         addCubeSide(rtFront, rtBack, ltFront, ltBack);
         for (GLFace f : getFaceList()) {
-            f.setTexture(getEnv().mTexture);
+            f.setTexture(getEnv().texture);
         }
     }
 

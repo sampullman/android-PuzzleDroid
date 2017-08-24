@@ -7,11 +7,11 @@ import android.view.MotionEvent;
 import com.threeDBJ.MGraphicsLib.GLColor;
 import com.threeDBJ.MGraphicsLib.GLEnvironment;
 import com.threeDBJ.MGraphicsLib.math.Vec2;
-import com.threeDBJ.MGraphicsLib.texture.OnValueChangedListener;
 import com.threeDBJ.MGraphicsLib.texture.TextureButton;
-import com.threeDBJ.MGraphicsLib.texture.TextureClickListener;
+import com.threeDBJ.MGraphicsLib.texture.TextureView.TextureClickListener;
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
 import com.threeDBJ.MGraphicsLib.texture.TextureSlider;
+import com.threeDBJ.MGraphicsLib.texture.TextureSlider.OnValueChangedListener;
 import com.threeDBJ.MGraphicsLib.texture.TextureStateView;
 import com.threeDBJ.MGraphicsLib.texture.TextureTextView;
 import com.threeDBJ.MGraphicsLib.texture.TextureTimer;
@@ -382,7 +382,7 @@ public class CubeMenu extends GLEnvironment {
     }
 
     public void save(SharedPreferences prefs) {
-        Util.saveTimerTime(prefs, timer.getTime(), timer.started || timer.paused);
+        Util.saveTimerTime(prefs, timer.getTime(), timer.isStarted() || timer.isPaused());
     }
 
     public void restore() {

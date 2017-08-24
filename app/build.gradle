@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "threedbj.com.puzzledroid"
         minSdkVersion 15
@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     compile 'com.jakewharton.timber:timber:4.5.1'
-    compile 'com.android.support:appcompat-v7:26.0.0'
+    compile 'com.android.support:appcompat-v7:26.0.1'
 
-    compile 'com.github.sampullman:android-mgraphicslib:master-SNAPSHOT'
+    compile 'com.github.sampullman:android-mgraphicslib:-SNAPSHOT'
 }

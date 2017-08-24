@@ -662,11 +662,11 @@ public class RubeCube {
             setupLayers();
             setupSides();
             temp.generate();
-            world.mShapeList = temp.mShapeList;
-            world.mVertexList = temp.mVertexList;
-            world.mVertexBuffer = temp.mVertexBuffer;
-            world.mIndexBuffer = temp.mIndexBuffer;
-            world.mColorBuffer = temp.mColorBuffer;
+            world.shapeList = temp.shapeList;
+            world.vertexList = temp.vertexList;
+            world.vertexBuffer = temp.vertexBuffer;
+            world.indexBuffer = temp.indexBuffer;
+            world.colorBuffer = temp.colorBuffer;
         }
     };
 

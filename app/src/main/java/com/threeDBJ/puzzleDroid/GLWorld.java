@@ -38,14 +38,14 @@ public class GLWorld extends GLEnvironment {
         if (!paused) {
             cube.animate();
             //gl.glBindTexture(GL11.GL_TEXTURE_2D, mTexture.id);
-            mColorBuffer.position(0);
-            mTextureBuffer.position(0);
-            mVertexBuffer.position(0);
-            mIndexBuffer.position(0);
-            gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
-            gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColorBuffer);
-            gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, mTextureBuffer);
-            gl.glDrawElements(GL10.GL_TRIANGLES, mIndexCount, GL10.GL_UNSIGNED_SHORT, mIndexBuffer);
+            colorBuffer.position(0);
+            textureBuffer.position(0);
+            vertexBuffer.position(0);
+            indexBuffer.position(0);
+            gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
+            gl.glColorPointer(4, GL10.GL_FLOAT, 0, colorBuffer);
+            gl.glTexCoordPointer(2, GL11.GL_FLOAT, 0, textureBuffer);
+            gl.glDrawElements(GL10.GL_TRIANGLES, indexCount, GL10.GL_UNSIGNED_SHORT, indexBuffer);
         }
         gl.glPopMatrix();
     }
