@@ -3,6 +3,7 @@ package com.threeDBJ.puzzleDroid;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 
 import com.threeDBJ.MGraphicsLib.GLColor;
 import com.threeDBJ.MGraphicsLib.math.Quaternion;
@@ -40,6 +41,7 @@ public class RubeCube {
     private final float TOUCH_SCALE_FACTOR = (float) Math.PI / 180;
 
     private int mode = NONE, activePtrId = -1, dim;
+    private VelocityTracker velocityTracker;
 
     public RubeCube(GLWorld world, int dim) {
         this.dim = dim;
@@ -545,6 +547,12 @@ public class RubeCube {
         final int action = e.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
+                if(velocityTracker == null) {
+                    velocityTracker = VelocityTracker.obtain();
+                } else {
+                    velocityTracker.clear();
+                }
+                velocityTracker.addMovement(e);
                 x1 = e.getX();
                 y1 = e.getY();
                 mode = DRAG;
@@ -564,6 +572,7 @@ public class RubeCube {
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
+                velocityTracker.addMovement(e);
                 if (activePtrId < 0 || activePtrId >= e.getPointerCount()) break;
                 final int ptrInd = e.findPointerIndex(activePtrId);
                 float x2 = e.getX(ptrInd);
@@ -624,8 +633,9 @@ public class RubeCube {
                 break;
             }
             case MotionEvent.ACTION_POINTER_DOWN: {
-                if (curLayer != null && mode == SPIN)
+                if (curLayer != null && mode == SPIN) {
                     curLayer.dragEnd();
+                }
                 float x1 = e.getX(0);
                 float x2 = e.getX(1);
                 float y1 = e.getY(0);
@@ -638,21 +648,11 @@ public class RubeCube {
                 }
                 break;
             }
-            case MotionEvent.ACTION_UP: {
-                activePtrId = -1;
-                mode = NONE;
-                if (curLayer != null)
-                    curLayer.dragEnd();
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                dragEnd(e);
                 break;
-            }
 
-            case MotionEvent.ACTION_CANCEL: {
-                activePtrId = -1;
-                mode = NONE;
-                if (curLayer != null)
-                    curLayer.dragEnd();
-                break;
-            }
             case MotionEvent.ACTION_POINTER_UP: {
                 // Back to translate
                 final int ptrInd = (action & MotionEvent.ACTION_POINTER_INDEX_MASK)
@@ -666,6 +666,20 @@ public class RubeCube {
                 activePtrId = e.getPointerId(nPtrInd);
                 break;
             }
+        }
+    }
+
+    private void dragEnd(MotionEvent e) {
+        velocityTracker.addMovement(e);
+        velocityTracker.computeCurrentVelocity(15, 120f);
+
+        if (mode == DRAG) {
+            world.dragEnd(e.getX(), e.getY(), velocityTracker.getXVelocity(), velocityTracker.getYVelocity());
+        }
+        activePtrId = -1;
+        mode = NONE;
+        if (curLayer != null) {
+            curLayer.dragEnd();
         }
     }
 

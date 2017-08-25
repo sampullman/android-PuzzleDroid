@@ -1,5 +1,7 @@
 package com.threeDBJ.puzzleDroid;
 
+import android.os.Handler;
+
 import com.threeDBJ.MGraphicsLib.ArcBall;
 import com.threeDBJ.MGraphicsLib.GLEnvironment;
 import com.threeDBJ.MGraphicsLib.math.Mat4;
@@ -9,6 +11,12 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 public class GLWorld extends GLEnvironment {
+    private final Handler handler = new Handler();
+    private static final int FLING_DELTA = 30;
+    private static final float FLING_DECELERATION = 0.83f;
+    private static final float FLING_MIN_VELOCITY = 0.1f;
+    private int flingCount = 0;
+    private float lastX, lastY, flingVelX, flingVelY;
 
     private RubeCube cube;
 
@@ -51,12 +59,40 @@ public class GLWorld extends GLEnvironment {
     }
 
     public void dragStart(float x, float y) {
+        handler.removeCallbacks(flingRunnable);
+        flingCount = 0;
         arcBall.dragStart(x, y);
     }
 
     public void drag(float x, float y) {
         rotateBy(arcBall.drag(x, y));
     }
+
+    public void dragEnd(float x, float y, float xVel, float yVel) {
+        drag(x, y);
+        this.lastX = x;
+        this.lastY = y;
+        this.flingVelX = xVel;
+        this.flingVelY = yVel;
+        handler.postDelayed(flingRunnable, FLING_DELTA);
+    }
+
+    private Runnable flingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            lastX += flingVelX;
+            lastY += flingVelY;
+            drag(lastX, lastY);
+            flingVelX *= FLING_DECELERATION;
+            flingVelY *= FLING_DECELERATION;
+            flingCount += 1;
+            if((Math.abs(flingVelX) > FLING_MIN_VELOCITY) &&
+                    (Math.abs(flingVelY) > FLING_MIN_VELOCITY)) {
+
+                handler.postDelayed(flingRunnable, FLING_DELTA);
+            }
+        }
+    };
 
     public void rotateBy(Quaternion q) {
         startQuat.mulLeft(q);
