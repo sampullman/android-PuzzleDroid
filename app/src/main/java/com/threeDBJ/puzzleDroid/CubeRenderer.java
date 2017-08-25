@@ -13,6 +13,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import timber.log.Timber;
+
 public class CubeRenderer implements GLSurfaceView.Renderer {
 
     private float _width = 320f;
@@ -26,20 +28,20 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
     private float xMin, xMax, yMin, yMax;
     public boolean worldBoundsSet = false, GLDataLoaded = false;
 
-    private GLWorld mWorld;
+    private GLWorld world;
     private CubeMenu menu;
-    private TextureFont mTextureFont;
+    private TextureFont textureFont;
     private Context context;
     private SharedPreferences prefs;
-    private RubeCube rCube;
+    private RubeCube cube;
 
     public CubeRenderer(Context context, TextureFont font, GLWorld world,
                         RubeCube rCube, CubeMenu menu, SharedPreferences prefs) {
-        mWorld = world;
+        this.world = world;
         this.menu = menu;
-        this.rCube = rCube;
+        this.cube = rCube;
         this.context = context;
-        mTextureFont = font;
+        textureFont = font;
         this.prefs = prefs;
     }
 
@@ -61,17 +63,19 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
 
         gl.glHint(GL11.GL_POLYGON_SMOOTH_HINT, GL11.GL_NICEST);
         menu.init(gl, context);
-        mTextureFont.init(gl, context);
+        textureFont.init(gl, context);
         if (Util.dimensionSaved(prefs)) {
-            rCube.init();
+            cube.init();
             menu.setRestore(prefs);
-            rCube.restore(prefs);
+            Timber.d("Restoring sides");
+            cube.restore(prefs);
         } else {
-            rCube.init();
-            rCube.setupSides();
+            Timber.d("Initializing sides");
+            cube.init();
+            cube.setupSides();
         }
-        rCube.world.generate();
-        mWorld.setRubeCube(rCube);
+        cube.world.generate();
+        world.setRubeCube(cube);
         GLDataLoaded = true;
     }
 
@@ -100,7 +104,7 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         menu.draw(gl);
-        mWorld.draw(gl);
+        world.draw(gl);
         gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);

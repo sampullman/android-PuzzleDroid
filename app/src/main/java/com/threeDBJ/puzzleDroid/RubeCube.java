@@ -11,6 +11,8 @@ import com.threeDBJ.puzzleDroid.util.Util;
 
 import java.util.Random;
 
+import timber.log.Timber;
+
 public class RubeCube {
 
     public static float MAX_SPIN_RATE = 0.08f;
@@ -136,6 +138,18 @@ public class RubeCube {
         }
     }
 
+    void printFaceColors(String prepend) {
+        StringBuilder colors = new StringBuilder();
+        for (int i = 0; i < faceColors.length; i += 1) {
+            for (int j = 0; j < dim; j += 1) {
+                for (int k = 0; k < dim; k += 1) {
+                    colors.append(i).append(' ');
+                }
+            }
+        }
+        Timber.d("%s: %s", prepend, colors);
+    }
+
     private void initSideColors() {
         int i, j, k;
         for (i = 0; i < faceColors.length; i += 1) {
@@ -145,6 +159,7 @@ public class RubeCube {
                 }
             }
         }
+        printFaceColors("Colors1");
     }
 
     void setupSides() {
@@ -698,14 +713,20 @@ public class RubeCube {
 
     public void restore(SharedPreferences prefs) {
         int i, j, k;
-        GLColor c;
-        int n = 0;
+        int colorSum = 0;
         for (i = 0; i < faceColors.length; i += 1) {
             for (j = 0; j < dim; j += 1) {
                 for (k = 0; k < dim; k += 1) {
-                    faceColors[i][j][k] = prefs.getInt(i + "" + j + "" + k, i);
+                    int color = prefs.getInt(i + "" + j + "" + k, i);
+                    faceColors[i][j][k] = color;
+                    colorSum += color;
                 }
             }
+            Timber.d("Restore color %d00 %d", i, faceColors[i][0][0]);
+        }
+        if(colorSum == 0) {
+            // TODO -- this is a hack, figure out why prefs get deleted sometimes
+            initSideColors();
         }
         setupSides();
     }
