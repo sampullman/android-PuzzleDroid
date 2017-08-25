@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.GLColor;
+import com.threeDBJ.MGraphicsLib.math.Quaternion;
 import com.threeDBJ.MGraphicsLib.math.Vec2;
 import com.threeDBJ.MGraphicsLib.math.Vec3;
 import com.threeDBJ.puzzleDroid.util.Util;
@@ -159,7 +160,6 @@ public class RubeCube {
                 }
             }
         }
-        printFaceColors("Colors1");
     }
 
     void setupSides() {
@@ -707,6 +707,11 @@ public class RubeCube {
                 }
             }
         }
+        Quaternion rotation = world.getRotation();
+        edit.putFloat("Rx", rotation.x);
+        edit.putFloat("Ry", rotation.y);
+        edit.putFloat("Rz", rotation.z);
+        edit.putFloat("Rw", rotation.w);
         edit.apply();
         Util.saveDimension(prefs, dim);
     }
@@ -729,6 +734,9 @@ public class RubeCube {
             initSideColors();
         }
         setupSides();
+        Quaternion rotation = new Quaternion(prefs.getFloat("Rx", 0f), prefs.getFloat("Ry", 0f),
+                prefs.getFloat("Rz", 0f), prefs.getFloat("Rw", 0f));
+        world.rotateBy(rotation);
     }
 
 }

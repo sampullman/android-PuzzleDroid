@@ -55,9 +55,16 @@ public class GLWorld extends GLEnvironment {
     }
 
     public void drag(float x, float y) {
-        Quaternion q = arcBall.drag(x, y);
+        rotateBy(arcBall.drag(x, y));
+    }
+
+    public void rotateBy(Quaternion q) {
         startQuat.mulLeft(q);
         rotate.set(startQuat);
+    }
+
+    public Quaternion getRotation() {
+        return startQuat;
     }
 
     public void setDimensions(int w, int h) {
