@@ -103,8 +103,8 @@ public class CubeRenderer implements GLSurfaceView.Renderer {
         gl.glEnableClientState(GL11.GL_COLOR_ARRAY);
         gl.glEnableClientState(GL11.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-        menu.draw(gl);
         world.draw(gl);
+        menu.draw(gl);
         gl.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL11.GL_COLOR_ARRAY);
         gl.glDisableClientState(GL11.GL_VERTEX_ARRAY);
