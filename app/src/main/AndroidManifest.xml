@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.threeDBJ.puzzleDroid">
+    package="com.threeDBJ.puzzleDroidFree">
 
     <application
         android:allowBackup="true"
@@ -8,7 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="com.threeDBJ.puzzleDroid.PuzzleDroidApp">
+        android:name="com.threeDBJ.puzzleDroidFree.PuzzleDroidApp">
 
         <activity
             android:name=".PuzzleDroidActivity"

@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import android.app.Application;
 import android.util.Log;

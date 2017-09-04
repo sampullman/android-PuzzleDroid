@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid.util;
+package com.threeDBJ.puzzleDroidFree.util;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

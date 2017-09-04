@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,7 +17,7 @@ import com.threeDBJ.MGraphicsLib.texture.TextureTextView;
 import com.threeDBJ.MGraphicsLib.texture.TextureTimer;
 import com.threeDBJ.MGraphicsLib.texture.TextureView;
 import com.threeDBJ.MGraphicsLib.texture.TranslateAnimation;
-import com.threeDBJ.puzzleDroid.util.Util;
+import com.threeDBJ.puzzleDroidFree.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import com.threeDBJ.MGraphicsLib.GLFace;
 import com.threeDBJ.MGraphicsLib.GLShape;

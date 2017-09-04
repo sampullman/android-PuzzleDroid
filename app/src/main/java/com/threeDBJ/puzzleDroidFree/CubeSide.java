@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import com.threeDBJ.MGraphicsLib.math.Mat4;
 import com.threeDBJ.MGraphicsLib.math.Vec2;

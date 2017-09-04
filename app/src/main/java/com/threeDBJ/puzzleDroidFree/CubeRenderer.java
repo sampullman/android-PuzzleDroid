@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,7 +7,7 @@ import android.opengl.GLU;
 
 import com.threeDBJ.MGraphicsLib.math.Vec3;
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
-import com.threeDBJ.puzzleDroid.util.Util;
+import com.threeDBJ.puzzleDroidFree.util.Util;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

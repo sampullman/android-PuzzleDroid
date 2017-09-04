@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -9,7 +9,7 @@ import com.threeDBJ.MGraphicsLib.GLColor;
 import com.threeDBJ.MGraphicsLib.math.Quaternion;
 import com.threeDBJ.MGraphicsLib.math.Vec2;
 import com.threeDBJ.MGraphicsLib.math.Vec3;
-import com.threeDBJ.puzzleDroid.util.Util;
+import com.threeDBJ.puzzleDroidFree.util.Util;
 
 import java.util.Random;
 

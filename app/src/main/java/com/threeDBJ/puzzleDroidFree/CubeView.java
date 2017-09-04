@@ -1,4 +1,4 @@
-package com.threeDBJ.puzzleDroid;
+package com.threeDBJ.puzzleDroidFree;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.threeDBJ.MGraphicsLib.texture.TextureFont;
-import com.threeDBJ.puzzleDroid.util.Util;
+import com.threeDBJ.puzzleDroidFree.util.Util;
 
 import timber.log.Timber;
 
